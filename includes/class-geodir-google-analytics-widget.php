@@ -20,8 +20,8 @@ class GeoDir_Google_Analytics_Widget extends WP_Super_Duper {
     public function __construct() {
         $options = array(
             'textdomain'    => 'geodir-ga',
-            'block-icon'    => 'location-alt',
-            'block-category'=> 'common',
+            'block-icon'    => 'chart-bar',
+            'block-category'=> 'widgets',
             'block-keywords'=> "['analytics','geodir','geodirectory','google','google analytics']",
             'block-output'  => array(
                 'element::img'   => array(
@@ -65,28 +65,19 @@ class GeoDir_Google_Analytics_Widget extends WP_Super_Duper {
 
 
         parent::__construct( $options );
-		
-		$widget_ops = array(
-            'classname' => 'geodir-widget gd-widget-detail-google-analytics',
-            'description' => __( 'Show google analytics on detail page.', 'geodir-ga' ),
-            'customize_selective_refresh' => true,
-            'geodirectory' => true,
-            'gd_show_pages' => array( 'detail' ),
-        );
-        //parent::__construct( 'gd_google_analytics', __( 'GD > Detail Google Analytics', 'geodir-ga' ), $widget_ops );
     }
 
-    /**
-     * Outputs the content for the current Detail Google Analytics widget instance.
-     *
-     * @since 1.0.0
-     * @access public
-     *
-     * @param array $args     Display arguments including 'before_title', 'after_title',
-     *                        'before_widget', and 'after_widget'.
-     * @param array $instance Settings for the current Detail Rating widget instance.
-     */
-    public function widget( $args, $instance ) {
+    
+	/**
+	 * This is the output function for the widget, shortcode and block (front end).
+	 *
+	 * @param array $args The arguments values.
+	 * @param array $widget_args The widget arguments when used.
+	 * @param string $content The shortcode content argument
+	 *
+	 * @return string
+	 */
+	public function output( $args = array(), $widget_args = array(), $content = '' ) {
         global $post, $preview;
 		
 		if ( !geodir_is_page( 'detail' ) || $preview || empty( $post ) ) {
@@ -99,13 +90,13 @@ class GeoDir_Google_Analytics_Widget extends WP_Super_Duper {
          * @since 1.0.0
          *
          * @param string $title    The widget title. Default 'Pages'.
-         * @param array  $instance An array of the widget's settings.
+         * @param array  $widget_args An array of the widget's settings.
          * @param mixed  $id_base  The widget ID.
          */
-        $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
+        $title = apply_filters( 'widget_title', empty( $widget_args['title'] ) ? '' : $widget_args['title'], $widget_args, $this->id_base );
 		
-		$allow_roles = ! empty( $instance['user_roles'] ) && is_array( $instance['user_roles'] ) ? $instance['user_roles'] : array( 'owner' );
-		$allow_roles = apply_filters( 'geodir_ga_widget_user_roles', $allow_roles, $instance, $this->id_base );
+		$allow_roles = ! empty( $widget_args['user_roles'] ) && is_array( $widget_args['user_roles'] ) ? $widget_args['user_roles'] : array( 'owner' );
+		$allow_roles = apply_filters( 'geodir_ga_widget_user_roles', $allow_roles, $widget_args, $this->id_base );
 		if ( empty( $allow_roles ) ) {
 			return;
 		}

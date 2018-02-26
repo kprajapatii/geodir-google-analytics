@@ -96,10 +96,13 @@ class GeoDir_Google_Analytics {
     private function includes() {
         global $geodirectory;
 
+		// Functions
 		require_once( $this->plugin_dir . 'includes/functions.php' );
-        
-        include_once(  $this->plugin_dir . 'includes/class-geodir-google-analytics-widget.php' );
+
+        // Classes
+        require_once( $this->plugin_dir . 'includes/class-geodir-google-analytics-widget.php' );
         require_once( $this->plugin_dir . 'includes/admin/class-geodir-google-analytics-admin.php' );
+
 		if ( $this->is_request( 'admin' ) || $this->is_request( 'test' ) || $this->is_request( 'cli' ) ) {
 			require_once( $this->plugin_dir . 'includes/admin/class-geodir-google-analytics-api.php' );
 		}
@@ -113,7 +116,7 @@ class GeoDir_Google_Analytics {
         
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
         add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
-		add_action( 'widgets_init', array( $this, 'register_widgets' ) );
+		add_action( 'widgets_init', array( $this, 'register_widgets' ), 11 );
 		add_action( 'geodir_post_package_info', array( $this, 'package_default_value' ), -1, 3 );
 		add_action( 'geodir_detail_page_widget_id_bases', array( $this, 'set_widget_id_bases' ), 10, 1 );
         

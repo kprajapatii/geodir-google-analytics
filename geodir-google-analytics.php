@@ -60,4 +60,4 @@ function geodir_google_analytics() {
 
     $geodir_ga = GeoDir_Google_Analytics::instance();
 }
-geodir_google_analytics();
+add_action( 'geodirectory_loaded', 'geodir_google_analytics' );
