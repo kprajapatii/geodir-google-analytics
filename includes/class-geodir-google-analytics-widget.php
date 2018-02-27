@@ -22,7 +22,7 @@ class GeoDir_Google_Analytics_Widget extends WP_Super_Duper {
             'textdomain'    => 'geodir-ga',
             'block-icon'    => 'chart-bar',
             'block-category'=> 'widgets',
-            'block-keywords'=> "['analytics','geodir','geodirectory','google','google analytics']",
+            'block-keywords'=> "['analytics','geodirectory','google']",
             'block-output'  => array(
                 'element::img'   => array(
                     'src' => geodir_plugin_url()."/assets/images/block-placeholder-map.png",

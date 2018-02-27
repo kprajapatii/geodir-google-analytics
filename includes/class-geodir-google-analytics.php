@@ -119,12 +119,12 @@ class GeoDir_Google_Analytics {
 		add_action( 'widgets_init', array( $this, 'register_widgets' ), 11 );
 		add_action( 'geodir_post_package_info', array( $this, 'package_default_value' ), -1, 3 );
 		add_action( 'geodir_detail_page_widget_id_bases', array( $this, 'set_widget_id_bases' ), 10, 1 );
+		add_filter( 'geodir_params', array( $this, 'scripts_params' ), 10, 1 );
         
         if ( is_admin() ) {
             add_action( 'admin_init', array( $this->admin, 'activation_redirect' ) );
         } else {
             add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-			add_filter( 'geodir_params', array( $this, 'scripts_params' ), 10, 1 );
 			add_action( 'wp_head', 'geodir_ga_add_tracking_code' );
         }
 		
