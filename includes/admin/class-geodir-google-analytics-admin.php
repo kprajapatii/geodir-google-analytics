@@ -111,7 +111,9 @@ class GeoDir_Google_Analytics_Admin {
     }
 	
 	public function load_settings_page( $settings_pages ) {
-		if ( !( isset( $_REQUEST['page'] ) && $_REQUEST['page'] == 'gd-cpt-settings' ) ) {
+		$post_type = ! empty( $_REQUEST['post_type'] ) ? sanitize_text_field( $_REQUEST['post_type'] ) : 'gd_place';
+
+		if ( ! ( ! empty( $_REQUEST['page'] ) && $_REQUEST['page'] == $post_type . '-settings' ) ) {
 			$settings_pages[] = include( GEODIR_GA_PLUGIN_DIR . 'includes/admin/settings/class-geodir-settings-analytics.php' );
 		}
 
