@@ -168,7 +168,7 @@ function geodir_ga_get_token() {
  * @since 1.0.0
  * @package GeoDirectory
  */
-function geodir_ga_display_analytics() {
+function geodir_ga_display_analytics($args = array()) {
     global $post, $preview;
 
     if ( $preview || empty( $post ) ) {
@@ -698,7 +698,7 @@ function geodir_ga_display_analytics() {
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
-        <button type="button" class="gdga-show-analytics"><?php _e('Show Google Analytics', 'geodir-ga');?></button>
+        <button type="button" class="gdga-show-analytics"><?php echo !empty($args['button_text']) ? esc_attr($args['button_text']) : __('Show Google Analytics', 'geodir-ga');?></button>
         <span id="ga_stats" class="gdga-analytics-box" style="display:none">
             <div id="ga-analytics-title"><?php _e("Analytics", 'geodir-ga');?></div>
             <div id="gd-active-users-container">
@@ -725,7 +725,7 @@ function geodir_ga_display_analytics() {
     do_action('geodir_after_google_analytics');
     $content_html = ob_get_clean();
     if (trim($content_html) != '')
-        $content_html = '<div class="geodir-company_info geodir-details-sidebar-google-analytics">' . $content_html . '</div>';
+        $content_html = '<div class="geodir-details-sidebar-google-analytics">' . $content_html . '</div>';
     if ((int)geodir_get_option('geodir_disable_google_analytics_section') != 1) {
         /**
          * Filter the geodir_edit_post_link() function content.
