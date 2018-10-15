@@ -25,6 +25,8 @@ class GeoDir_Google_Analytics_Admin {
 		add_action( 'wp_ajax_geodir_ga_deauthorize', array( $this, 'deauthorize' ) );
 		add_action( 'wp_ajax_geodir_ga_callback', array( $this, 'callback' ) );
 		add_action( 'geodir_admin_field_google_analytics', array( $this, 'google_analytics_field' ), 10, 1 );
+		add_action( 'geodir_get_settings_package', array( $this, 'pricing_package_settings' ), 10, 3 );
+		add_action( 'geodir_pricing_process_data_for_save', array( $this, 'pricing_process_data_for_save' ), 1, 3 );
     }
     
     /**
@@ -229,5 +231,38 @@ class GeoDir_Google_Analytics_Admin {
 			</td>
 		</tr>
 		<?php
+	}
+
+	public function pricing_package_settings( $settings, $current_section, $package_data ) {
+		$new_settings = array();
+
+		foreach ( $settings as $key => $setting ) {
+			if ( ! empty( $setting['id'] ) && $setting['id'] == 'package_features_settings' && ! empty( $setting['type'] ) && $setting['type'] == 'sectionend' ) {
+				$new_settings[] = array(
+					'type' => 'checkbox',
+					'id' => 'package_google_analytics',
+					'title'=> __( 'Google Analytics', 'geodir-ga' ),
+					'desc' => __( 'Tick to enable google analytics.', 'geodir-ga' ),
+					'std' => '0',
+					'advanced' => true,
+					'value'	=> ( ! empty( $package_data['google_analytics'] ) ? '1' : '0' )
+				);
+			}
+			$new_settings[] = $setting;
+		}
+
+		return $new_settings;
+	}
+
+	public function pricing_process_data_for_save( $package_data, $data, $package ) {
+		if ( isset( $data['google_analytics'] ) ) {
+			$package_data['meta']['google_analytics'] = ! empty( $data['google_analytics'] ) ? 1 : 0;
+		} else if ( isset( $package['google_analytics'] ) ) {
+			$package_data['meta']['google_analytics'] = $package['google_analytics'];
+		} else {
+			$package_data['meta']['google_analytics'] = 0;
+		}
+
+		return $package_data;
 	}
 }

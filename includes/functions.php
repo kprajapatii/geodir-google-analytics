@@ -175,13 +175,15 @@ function geodir_ga_display_analytics($args = array()) {
 		return;
 	}
 
-    $package_info = geodir_post_package_info( array(), $post );
-
     $id = trim( geodir_get_option( 'ga_account_id' ) );
 
     if ( ! $id ) {
         return; // if no Google Analytics ID then bail.
     }
+
+	if ( ! geodir_ga_check_post_google_analytics( $post ) ) {
+		return;
+	}
 
     ob_start(); // Start buffering;
     /**
@@ -205,7 +207,7 @@ function geodir_ga_display_analytics($args = array()) {
     $hide_refresh = geodir_get_option('ga_auto_refresh');
     
     $auto_refresh = $hide_refresh && $refresh_time && $refresh_time > 0 ? 1 : 0;
-    if (geodir_get_option('ga_stats') &&  (isset($package_info->google_analytics) && $package_info->google_analytics == '1') ) {
+    if (geodir_get_option('ga_stats')) {
         $page_url = urlencode($_SERVER['REQUEST_URI']);
         ?>
         <script type="text/javascript">
@@ -759,4 +761,12 @@ function geodir_ga_add_tracking_code() {
     } elseif ( ( $tracking_code = geodir_get_option( 'ga_tracking_code' ) ) && ! geodir_get_option( 'ga_account_id' ) ) {
         echo stripslashes( geodir_get_option( 'ga_tracking_code' ) );
     }
+}
+
+function geodir_ga_check_post_google_analytics( $post ) {
+	$package = geodir_get_post_package( $post );
+
+	$check = ! empty( $package->google_analytics ) ? true : false;
+
+	return apply_filters( 'geodir_ga_check_post_google_analytics', $check, $post );
 }
