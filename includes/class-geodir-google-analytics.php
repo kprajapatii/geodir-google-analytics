@@ -117,7 +117,7 @@ class GeoDir_Google_Analytics {
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
         add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 		add_action( 'widgets_init', array( $this, 'register_widgets' ), 11 );
-		add_action( 'geodir_post_package_info', array( $this, 'package_default_value' ), -1, 3 );
+		add_action( 'geodir_get_post_package', array( $this, 'package_default_value' ), -1, 3 );
 		add_action( 'geodir_detail_page_widget_id_bases', array( $this, 'set_widget_id_bases' ), 10, 1 );
 		add_filter( 'geodir_params', array( $this, 'scripts_params' ), 10, 1 );
         
@@ -234,11 +234,11 @@ class GeoDir_Google_Analytics {
 		return $params;
 	}
 	
-	public function package_default_value( $package_info, $post, $post_type ) {
+	public function package_default_value( $package, $post, $post_type ) {
 
-		$package_info['google_analytics'] = 1;
+		$package->google_analytics = 1;
 
-		return $package_info;
+		return $package;
 	}
 	
 	public function set_widget_id_bases( $id_bases ) {
