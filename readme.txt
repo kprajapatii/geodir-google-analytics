@@ -4,7 +4,7 @@ Donate link: https://wpgeodirectory.com/
 Tags: geodirectory, google analytics, geodirectory google analytics
 Requires at least: 4.9
 Tested up to: 4.9.9
-Stable tag: 2.0.0.0-beta
+Stable tag: 2.0.0.1-beta
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,9 @@ An answer to that question.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.0.0.1-beta =
+* All logged in setting not working properly - FIXED
 
 = 2.0.0.0-beta =
 * Initial release.

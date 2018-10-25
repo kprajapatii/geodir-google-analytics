@@ -65,6 +65,7 @@ class GeoDir_Google_Analytics_Widget extends WP_Super_Duper {
 					'options'   =>  array(
 						"owner,administrator" => __('Owner/Administrator', 'geodir-ga'),
 						"administrator" => __('Administrator', 'geodir-ga'),
+						"all-logged-in" => __('Everyone logged in', 'geodir-ga'),
 						"all" => __('Everyone', 'geodir-ga'),
 					),
 					'desc_tip' => true,
@@ -93,7 +94,24 @@ class GeoDir_Google_Analytics_Widget extends WP_Super_Duper {
 		if ( !geodir_is_page( 'detail' ) || $preview || empty( $post ) ) {
             return;
         }
-        
+
+		// options
+		$defaults = array(
+			'title'      => '',
+			'button_text' => '',
+			'user_roles'  => array( 'owner' ),
+		);
+
+//		print_r($args);
+//		echo '@@@';
+//		print_r($widget_args);
+
+		/**
+		 * Parse incoming $args into an array and merge it with $defaults
+		 */
+		$options = wp_parse_args( $args, $defaults );
+
+
         /**
          * Filters the widget title.
          *
@@ -104,55 +122,60 @@ class GeoDir_Google_Analytics_Widget extends WP_Super_Duper {
          * @param mixed  $id_base  The widget ID.
          */
        // $title = apply_filters( 'widget_title', empty( $widget_args['title'] ) ? '' : $widget_args['title'], $widget_args, $this->id_base );
-		
-		$allow_roles = ! empty( $widget_args['user_roles'] ) && is_array( $widget_args['user_roles'] ) ? $widget_args['user_roles'] : array( 'owner' );
+
+
+		$allow_roles = !empty( $options['user_roles'] ) ? $options['user_roles'] : array( 'owner' );
+
+		if(!is_array($allow_roles)){
+			$allow_roles = explode(",",$allow_roles);
+		}
+
 		$allow_roles = apply_filters( 'geodir_ga_widget_user_roles', $allow_roles, $widget_args, $this->id_base );
 		if ( empty( $allow_roles ) ) {
 			return;
 		}
 
 		if ( ! in_array( 'all', $allow_roles ) ) {
-			$user_id = is_user_logged_in() ? get_current_user_id() : 0;
-			if ( empty( $user_id ) ) {
-				return;
-			}
-			
-			$allow = false;
-			if ( ! empty( $post->post_author ) && $post->post_author == $user_id && in_array( 'owner', $allow_roles ) ) {
-				$allow = true; // Listing owner
-			}
 
-			if ( ! $allow ) {
-				$user_data = get_userdata( $user_id );
-				if ( empty( $user_data->roles ) ) {
+			if( in_array( 'all-logged-in', $allow_roles ) ){
+				$user_id = is_user_logged_in() ? get_current_user_id() : 0;
+				if ( empty( $user_id ) ) {
 					return;
 				}
-				
+			}else{
+				$user_id = is_user_logged_in() ? get_current_user_id() : 0;
+				if ( empty( $user_id ) ) {
+					return;
+				}
+
 				$allow = false;
-				foreach ( $user_data->roles as $user_role ) {
-					if ( in_array( $user_role, $allow_roles ) ) {
-						$allow = true;
-						break;
+				if ( ! empty( $post->post_author ) && $post->post_author == $user_id && in_array( 'owner', $allow_roles ) ) {
+					$allow = true; // Listing owner
+				}
+
+				if ( ! $allow ) {
+					$user_data = get_userdata( $user_id );
+					if ( empty( $user_data->roles ) ) {
+						return;
+					}
+
+					$allow = false;
+					foreach ( $user_data->roles as $user_role ) {
+						if ( in_array( $user_role, $allow_roles ) ) {
+							$allow = true;
+							break;
+						}
 					}
 				}
+
+				if ( ! $allow ) {
+					return;
+				}
 			}
-			
-			if ( ! $allow ) {
-				return;
-			}
+
 		}
 
-		// options
-		$defaults = array(
-			'title'      => '',
-			'button_text' => '',
-			'user_roles'  => '',
-		);
 
-		/**
-		 * Parse incoming $args into an array and merge it with $defaults
-		 */
-		$options = wp_parse_args( $args, $defaults );
 		
         ob_start();
         

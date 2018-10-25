@@ -15,7 +15,7 @@
  * Plugin Name:       GeoDirectory Google Analytics
  * Plugin URI:        https://wpgeodirectory.com
  * Description:       Allows Google Analytics tracking for GeoDirectory listings.
- * Version:           2.0.0.0-beta
+ * Version:           2.0.0.1-beta
  * Author:            GeoDirectory
  * Author URI:        https://wpgeodirectory.com/
  * Requires at least: 4.9
@@ -33,7 +33,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 if ( !defined( 'GEODIR_GA_VERSION' ) ) {
-	define( 'GEODIR_GA_VERSION', '2.0.0.0-beta' );
+	define( 'GEODIR_GA_VERSION', '2.0.0.1-beta' );
 }
 
 /**
