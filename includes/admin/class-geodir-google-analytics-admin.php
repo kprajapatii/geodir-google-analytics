@@ -27,6 +27,7 @@ class GeoDir_Google_Analytics_Admin {
 		add_action( 'geodir_admin_field_google_analytics', array( $this, 'google_analytics_field' ), 10, 1 );
 		add_action( 'geodir_pricing_package_settings', array( $this, 'pricing_package_settings' ), 10, 3 );
 		add_action( 'geodir_pricing_process_data_for_save', array( $this, 'pricing_process_data_for_save' ), 1, 3 );
+		add_filter( 'geodir_uninstall_options', array( $this, 'uninstall_setting' ), 21, 1);
     }
     
     /**
@@ -264,5 +265,30 @@ class GeoDir_Google_Analytics_Admin {
 		}
 
 		return $package_data;
+	}
+
+	/**
+	 * Add the plugin to uninstall settings.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array $settings the settings array.
+	 * @return array The modified settings.
+	 */
+	public function uninstall_setting( $settings ) {
+		array_pop( $settings );
+
+		$settings[] = array(
+			'name'     => __( 'Google Analytics', 'geodir-ga' ),
+			'desc'     => __( 'Check this box if you would like to completely remove all of its data when Google Analytics is deleted.', 'geodir-ga' ),
+			'id'       => 'uninstall_geodir_google_analytics',
+			'type'     => 'checkbox',
+		);
+		$settings[] = array( 
+			'type' => 'sectionend',
+			'id' => 'uninstall_options'
+		);
+
+		return $settings;
 	}
 }

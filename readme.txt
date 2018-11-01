@@ -30,6 +30,9 @@ An answer to that question.
 
 == Changelog ==
 
+= 2.0.0.2-beta =
+* Add uninstall function - CHANGED
+
 = 2.0.0.1-beta =
 * All logged in setting not working properly - FIXED
 
