@@ -62,7 +62,7 @@ if ( ( ! empty( $geodir_settings ) && ( ! empty( $geodir_settings['admin_uninsta
 
 	// Delete core options
 	delete_option( 'geodir_ga_version' );
-	delete_option( 'geodir_ga_version_upgraded_from' );
+	delete_option( 'geodir_ga_db_version' );
 	delete_option( 'widget_gd_google_analytics' );
 	
 	// Clear any cached data that has been removed.

@@ -1,10 +1,18 @@
 <?php
+/**
+ * Google Analytics Stat API.
+ *
+ * @package    GeoDir_Google_Analytics
+ * @since      2.0.0.0
+ */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
- * Handles interactions with Google Analytics' Stat API
- *
- **/
+ * GeoDir_Google_Analytics_API class.
+ */
 class GeoDir_Google_Analytics_API {
 
 	var $client = false;

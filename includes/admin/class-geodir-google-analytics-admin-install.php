@@ -105,10 +105,10 @@ class GeoDir_Google_Analytics_Admin_Install {
 		self::maybe_update_db_version();
 
 		// Flush rules after install
-		do_action( 'geodir_ga_flush_rewrite_rules' );
+		do_action( 'geodir_google_analytics_flush_rewrite_rules' );
 
 		// Trigger action
-		do_action( 'geodir_ga_listing_installed' );
+		do_action( 'geodir_google_analytics_installed' );
 	}
 	
 	/**
