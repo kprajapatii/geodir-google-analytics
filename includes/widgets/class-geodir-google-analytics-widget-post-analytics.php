@@ -1,50 +1,55 @@
 <?php
 /**
-* GeoDirectory Detail Google Analytics Widget
-*
-* @since 1.0.0
-*
-* @package GeoDirectory
-*/
+ *GeoDirectory Detail Google Analytics Widget.
+ *
+ * @package    GeoDir_Google_Analytics
+ * @since      2.0.0.0
+ */
 
-class GeoDir_Google_Analytics_Widget extends WP_Super_Duper {
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * GeoDir_Google_Analytics_Widget_Post_Analytics class.
+ */
+class GeoDir_Google_Analytics_Widget_Post_Analytics extends WP_Super_Duper {
 	
 	public $arguments;
 	
 	/**
-     * Sets up a new Detail Google Analytics widget instance.
-     *
-     * @since 1.0.0
-     * @access public
-     */
-    public function __construct() {
-        $options = array(
-            'textdomain'    => 'geodir-ga',
-            'block-icon'    => 'chart-bar',
-            'block-category'=> 'widgets',
-            'block-keywords'=> "['analytics','geodirectory','google']",
+	 * Sets up the widgets name etc
+	 */
+	public function __construct() {
+
+		$options = array(
+			'textdomain'     => GEODIRECTORY_TEXTDOMAIN,
+			'block-icon'     => 'chart-bar',
+			'block-category' => 'widgets',
+			'block-keywords' => "['analytics','geodirectory','google']",
             'block-output'  => array(
-                'element::img'   => array(
-                    'src' => geodir_plugin_url()."/assets/images/block-placeholder-map.png",
-                    'alt' => __('Placeholder','geodirectory'),
+                'element::img' => array(
+                    'src' => geodir_plugin_url() . "/assets/images/block-placeholder-map.png",
+                    'alt' => __( 'Placeholder', 'geodirectory' ),
                     'title' => '[%title%]',
                     'user_roles' => '[%user_roles%]',
                 )
             ),
-            'class_name'    => __CLASS__,
-            'base_id'       => 'gd_google_analytics', // this us used as the widget id and the shortcode id.
-            'name'          => __('GD > Google Analytics','geodir-ga'), // the name of the widget.
-            'widget_ops'    => array(
-                'classname'   => 'geodir-google-analytics', // widget class
-                'description' => esc_html__('Show google analytics on detail page.','geodir-ga'), // widget description
-                'geodirectory' => true,
-            ),
+			'class_name'     => __CLASS__,
+			'base_id'        => 'gd_google_analytics',
+			'name'           => __( 'GD > Google Analytics', 'geodir-ga' ),
+			'widget_ops'     => array(
+				'classname'     => 'geodir-google-analytics',
+				'description'   => esc_html__( 'Show google analytics on detail page.', 'geodir-ga' ),
+				'geodirectory'  => true,
+				'gd_wgt_showhide' => 'show_on',
+				'gd_wgt_restrict' => array( 'gd-detail' ),
+			),
             'arguments'     => array(
 				'title'  => array(
 					'title' => __('Title:', 'geodir-ga'),
 					'desc' => __('The widget title:', 'geodir-ga'),
 					'type' => 'text',
-//					'placeholder' => __('The widget placeholder', 'geodir-ga'),
 					'desc_tip' => true,
 					'default'  => '',
 					'advanced' => false
@@ -74,10 +79,8 @@ class GeoDir_Google_Analytics_Widget extends WP_Super_Duper {
 			),
         );
 
-
         parent::__construct( $options );
     }
-
     
 	/**
 	 * This is the output function for the widget, shortcode and block (front end).
