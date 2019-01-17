@@ -4,7 +4,7 @@ Donate link: https://wpgeodirectory.com/
 Tags: geodirectory, google analytics, geodirectory google analytics
 Requires at least: 4.9
 Tested up to: 5.0
-Stable tag: 2.0.0.2
+Stable tag: 2.0.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,9 @@ An answer to that question.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.0.0.3 =
+* Small PHP notice fix - FIXED
 
 = 2.0.0.2 =
 * Install/update function added - ADDED
