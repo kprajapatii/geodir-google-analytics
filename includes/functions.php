@@ -208,7 +208,7 @@ function geodir_ga_display_analytics($args = array()) {
      * @param int $refresh_time Time interval to check & refresh new users results.
      */
     $refresh_time = apply_filters('geodir_google_analytics_refresh_time', $refresh_time);
-    $refresh_time = absint($refresh_time * 1000);
+    $refresh_time = absint( $refresh_time ) * 1000;
     
     $hide_refresh = geodir_get_option('ga_auto_refresh');
     
