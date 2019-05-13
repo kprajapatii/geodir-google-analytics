@@ -30,6 +30,9 @@ An answer to that question.
 
 == Changelog ==
 
+= 2.0.0.4 =
+* Ability to display widget on all pages - ADDED
+
 = 2.0.0.3 =
 * Small PHP notice fix - FIXED
 
