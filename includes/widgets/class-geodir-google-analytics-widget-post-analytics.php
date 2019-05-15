@@ -40,7 +40,7 @@ class GeoDir_Google_Analytics_Widget_Post_Analytics extends WP_Super_Duper {
 			'name'           => __( 'GD > Google Analytics', 'geodir-ga' ),
 			'widget_ops'     => array(
 				'classname'     => 'geodir-google-analytics',
-				'description'   => esc_html__( 'Show google analytics on detail page.', 'geodir-ga' ),
+				'description'   => esc_html__( 'Show google analytics stats on your website front page.', 'geodir-ga' ),
 				'geodirectory'  => true,
 				'gd_wgt_showhide' => 'show_on',
 				'gd_wgt_restrict' => array( 'gd-detail' ),
@@ -93,8 +93,8 @@ class GeoDir_Google_Analytics_Widget_Post_Analytics extends WP_Super_Duper {
 	 */
 	public function output( $args = array(), $widget_args = array(), $content = '' ) {
         global $post, $preview;
-		
-		if ( !geodir_is_page( 'detail' ) || $preview || empty( $post ) ) {
+
+		if ( $preview || empty( $post ) ) {
             return;
         }
 
