@@ -571,14 +571,14 @@ function gdga_refresh(stop) {
 		if (gd_gaAutoRefresh === 1 || gd_gaHideRefresh == 1) {
 			jQuery('#gdga-loader-icon').hide();
 		} else {
-			jQuery('#gdga-loader-icon svg').removeClass('fa-spin');
+			jQuery('#gdga-loader-icon .fa-refresh').removeClass('fa-spin');
 		}
 	} else {
 		if (gd_gaAutoRefresh === 1 || gd_gaHideRefresh == 1) {
 			jQuery('#gdga-loader-icon').show();
 		} else {
-			if (!jQuery('#gdga-loader-icon svg').hasClass('fa-spin')) {
-				jQuery('#gdga-loader-icon svg').addClass('fa-spin');
+			if (!jQuery('#gdga-loader-icon .fa-refresh').hasClass('fa-spin')) {
+				jQuery('#gdga-loader-icon .fa-refresh').addClass('fa-spin');
 			}
 		}
 	}

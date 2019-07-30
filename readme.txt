@@ -3,8 +3,8 @@ Contributors: stiofansisland, paoltaia
 Donate link: https://wpgeodirectory.com/
 Tags: geodirectory, google analytics, geodirectory google analytics
 Requires at least: 4.9
-Tested up to: 5.0
-Stable tag: 2.0.0.3
+Tested up to: 5.2
+Stable tag: 2.0.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ An answer to that question.
 == Changelog ==
 
 = 2.0.0.4 =
-* Ability to display widget on all pages - ADDED
+* Analytics widget can now be placed on any page and shown to anyone - ADDED
 
 = 2.0.0.3 =
 * Small PHP notice fix - FIXED

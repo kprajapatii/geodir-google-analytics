@@ -87,8 +87,8 @@ if ( ! class_exists( 'GeoDir_Settings_Analytics', false ) ) :
 						'id' => 'google_analytic_settings'
 					),
 					array(
-						'name' => __( 'Show business owner?', 'geodir-ga' ),
-						'desc' => __( 'Show the business owner google analytics stats?', 'geodir-ga' ),
+						'name' => __( 'Enable output widget?', 'geodir-ga' ),
+						'desc' => __( 'This will enable the output of the analytics output widget.', 'geodir-ga' ),
 						'id' => 'ga_stats',
 						'std' => '0',
 						'type' => 'checkbox',
