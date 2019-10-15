@@ -30,6 +30,9 @@ An answer to that question.
 
 == Changelog ==
 
+= 2.0.0.5 =
+* This Month vs Last Month option added in analytics stats view - ADDED
+
 = 2.0.0.4 =
 * Analytics widget can now be placed on any page and shown to anyone - ADDED
 
