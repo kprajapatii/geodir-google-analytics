@@ -156,6 +156,18 @@ class GeoDir_Google_Analytics_Widget_Post_Analytics extends WP_Super_Duper {
 					$allow = true; // Listing owner
 				}
 
+				if( function_exists( 'bp_is_my_profile' ) && bp_is_my_profile() && in_array( 'owner', $allow_roles ) ) {
+					$allow = true; // buddypress profile owner
+				}
+
+				if( function_exists( 'is_uwp_profile_page' ) && is_uwp_profile_page() && in_array( 'owner', $allow_roles ) ) {
+
+					$uwp_user = uwp_get_user_by_author_slug();
+					if( $uwp_user && $uwp_user->ID === $user_id ) {
+						$allow = true; // UWP profile owner
+					}
+				}
+
 				if ( ! $allow ) {
 					$user_data = get_userdata( $user_id );
 					if ( empty( $user_data->roles ) ) {
