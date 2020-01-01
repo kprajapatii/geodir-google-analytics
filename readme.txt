@@ -32,6 +32,7 @@ An answer to that question.
 
 = 2.0.0.5 =
 * This Month vs Last Month option added in analytics stats view - ADDED
+* Allow UWP and BuddyPress profile owners to view their profile stats - ADDED
 
 = 2.0.0.4 =
 * Analytics widget can now be placed on any page and shown to anyone - ADDED
