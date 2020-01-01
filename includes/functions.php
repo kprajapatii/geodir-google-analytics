@@ -80,6 +80,14 @@ function geodir_ga_get_analytics( $page, $ga_start, $ga_end ) {
         $start_date = date('Y-m-d', strtotime("-13 day"));
         $end_date = date('Y-m-d', strtotime("-7 day"));
         $dimensions = "ga:date,ga:nthDay";
+    } elseif (isset($_REQUEST['ga_type']) && $_REQUEST['ga_type'] == 'thismonth') {
+        $start_date = date('Y-m-01');
+        $end_date = date('Y-m-d');
+        $dimensions = "ga:date,ga:nthDay";
+    } elseif (isset($_REQUEST['ga_type']) && $_REQUEST['ga_type'] == 'lastmonth') {
+        $start_date = date('Y-m-01', strtotime("-1 month"));
+        $end_date = date('Y-m-t', strtotime("-1 month"));
+        $dimensions = "ga:date,ga:nthDay";
     } elseif (isset($_REQUEST['ga_type']) && $_REQUEST['ga_type'] == 'thisyear') {
         $start_date = date('Y')."-01-01";
         $end_date = date('Y-m-d');
@@ -182,6 +190,11 @@ function geodir_ga_display_analytics($args = array()) {
 	}
 
     $id = trim( geodir_get_option( 'ga_account_id' ) );
+    $month_last_day = max( (int) date( 't' ), (int) date( 't', strtotime( '-1 month' ) ) );
+    $month_days = array();
+    for ( $d = 1; $d <= $month_last_day; $d++ ) {
+        $month_days[] = $d;
+    }
 
     if ( ! $id ) {
         return; // if no Google Analytics ID then bail.
@@ -261,6 +274,19 @@ function gdga_weekVSweek() {
 	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=lastweek'); ?>", success: function(result){
 		ga_data2 = jQuery.parseJSON(result);
 		gd_renderWeekOverWeekChart();
+	}});
+}
+
+function gdga_monthVSmonth() {
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=thismonth'); ?>", success: function(result){
+		ga_data1 = jQuery.parseJSON(result);
+		if(ga_data1.error){jQuery('#ga_stats').html(result);return;}
+		gd_renderMonthOverMonthChart();
+	}});
+
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=lastmonth'); ?>", success: function(result){
+		ga_data2 = jQuery.parseJSON(result);
+		gd_renderMonthOverMonthChart();
 	}});
 }
 
@@ -517,6 +543,64 @@ function gd_renderWeekOverWeekChart() {
 	});
 }
 
+function gd_renderMonthOverMonthChart() {
+	if(ga_data1 && ga_data2){
+		thisMonth = ga_data1;
+		lastMonth = ga_data2;
+		ga_data1 = false;
+		ga_data2 = false;
+	}else{
+		return;
+	}
+
+	jQuery('#gdga-chart-container').show();
+	jQuery('#gdga-legend-container').show();
+	gdga_refresh(true);
+	jQuery('.gdga-type-container').show();
+	jQuery('#gdga-select-analytic').prop('disabled', false);
+
+	// Adjust `now` to experiment with different days, for testing only...
+	var now = moment();
+
+	Promise.all([thisMonth, lastMonth]).then(function(results) {
+		var data1 = results[0].rows.map(function(row) { return +row[2]; });
+		var data2 = results[1].rows.map(function(row) { return +row[2]; });
+		var labels = results[1].rows.map(function(row) { return +row[0]; });
+
+		labels = [<?php echo implode( ",", $month_days ) ?>];
+		
+		for (var i = 0, len = labels.length; i < len; i++) {
+			if (data1[i] === undefined) data1[i] = null;
+			if (data2[i] === undefined) data2[i] = 0;
+		}
+
+		var data = {
+			labels : labels,
+			datasets : [
+				{
+					label: '<?php _e('Last Month', 'geodir-ga');?>',
+					fillColor : "rgba(220,220,220,0.5)",
+					strokeColor : "rgba(220,220,220,1)",
+					pointColor : "rgba(220,220,220,1)",
+					pointStrokeColor : "#fff",
+					data : data2
+				},
+				{
+					label: '<?php _e('This Month', 'geodir-ga');?>',
+					fillColor : "rgba(151,187,205,0.5)",
+					strokeColor : "rgba(151,187,205,1)",
+					pointColor : "rgba(151,187,205,1)",
+					pointStrokeColor : "#fff",
+					data : data1
+				}
+			]
+		};
+
+		new Chart(makeCanvas('gdga-chart-container')).Line(data);
+		generateLegend('gdga-legend-container', data.datasets);
+	});
+}
+
 /**
  * Create a new canvas inside the specified element. Set it to be the width
  * and height of its container.
@@ -559,6 +643,8 @@ function gdga_select_option() {
 
 	if (gaType == 'weeks') {
 		gdga_weekVSweek();
+	} else if (gaType == 'months') {
+		gdga_monthVSmonth();
 	} else if (gaType == 'years') {
 		gdga_yearVSyear();
 	} else if (gaType == 'country') {
@@ -622,6 +708,7 @@ function gdga_refresh(stop) {
             <div class="gdga-type-container" style="display:none">
 				<select id="gdga-select-analytic" class="geodir-select" onchange="gdga_select_option();">
 					<option value="weeks"><?php _e("Last Week vs This Week", 'geodir-ga');?></option>
+					<option value="months"><?php _e("This Month vs Last Month", 'geodir-ga');?></option>
 					<option value="years"><?php _e("This Year vs Last Year", 'geodir-ga');?></option>
 					<option value="country"><?php _e("Top Countries", 'geodir-ga');?></option>
 				</select>

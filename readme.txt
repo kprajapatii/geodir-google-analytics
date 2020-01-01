@@ -31,6 +31,7 @@ An answer to that question.
 == Changelog ==
 
 = 2.0.0.5 =
+* This Month vs Last Month option added in analytics stats view - ADDED
 * Allow UWP and BuddyPress profile owners to view their profile stats - ADDED
 
 = 2.0.0.4 =
