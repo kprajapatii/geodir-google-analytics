@@ -100,7 +100,7 @@ function geodir_ga_get_analytics( $page, $ga_start, $ga_end ) {
         $start_date = "14daysAgo";
         $end_date = "yesterday";
         $dimensions = "ga:country";
-        $sort = "ga:pageviews";
+        $sort = "-ga:pageviews";
         $limit  = 5;
     } elseif (isset($_REQUEST['ga_type']) && $_REQUEST['ga_type'] == 'realtime') {
         $metrics = "rt:activeUsers";

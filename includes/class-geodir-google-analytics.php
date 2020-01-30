@@ -75,7 +75,7 @@ class GeoDir_Google_Analytics {
 		$this->define( 'GEODIR_GA_CLIENTID', '687912069872-sdpsjssrdt7t3ao1dnv1ib71hkckbt5s.apps.googleusercontent.com' );
 		$this->define( 'GEODIR_GA_CLIENTSECRET', 'yBVkDpqJ1B9nAETHy738Zn8C' ); // don't worry - this don't need to be secret in our case
 		$this->define( 'GEODIR_GA_REDIRECT', 'urn:ietf:wg:oauth:2.0:oob' );
-		$this->define( 'GEODIR_GA_SCOPE', 'https://www.googleapis.com/auth/analytics' ); // .readonly
+		$this->define( 'GEODIR_GA_SCOPE', 'https://www.googleapis.com/auth/analytics.readonly' ); // .readonly
     }
 
 	/**

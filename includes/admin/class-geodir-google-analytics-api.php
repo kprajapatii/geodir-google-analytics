@@ -39,7 +39,7 @@ class GeoDir_Google_Analytics_API {
 		$this->client->setClientId( GEODIR_GA_CLIENTID );
 		$this->client->setClientSecret( GEODIR_GA_CLIENTSECRET );
 		$this->client->setRedirectUri( GEODIR_GA_REDIRECT );
-		$this->client->setScopes( array( 'https://www.googleapis.com/auth/analytics' ) );
+		$this->client->setScopes( array( GEODIR_GA_SCOPE ) );
 
 		try {
 			$this->analytics = new Google_Service_Analytics( $this->client );

@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: GeoDirectory - Google Analytics 2.0.0.4\n"
+"Project-Id-Version: GeoDirectory - Google Analytics 2.0.0.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-30 15:41+0100\n"
-"PO-Revision-Date: 2019-07-30 15:41+0100\n"
+"POT-Creation-Date: 2020-01-30 17:37+0000\n"
+"PO-Revision-Date: 2020-01-30 17:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
 "Language: en_US\n"
@@ -146,141 +146,153 @@ msgstr ""
 msgid "Are you wish to Deauthorize and break Analytics?"
 msgstr ""
 
-#: includes/functions.php:107 includes/functions.php:114
+#: includes/functions.php:115 includes/functions.php:122
 msgid "Please check Google Analytics Settings"
 msgstr ""
 
-#: includes/functions.php:144
+#: includes/functions.php:152
 msgid ""
 "Not authorized, please click authorized in GD > Google analytic settings."
 msgstr ""
 
-#: includes/functions.php:162
+#: includes/functions.php:170
 msgid "Login failed"
 msgstr ""
 
-#: includes/functions.php:365
+#: includes/functions.php:391
 msgid "No results available"
 msgstr ""
 
-#: includes/functions.php:398
+#: includes/functions.php:424
 msgid "Jan"
 msgstr ""
 
-#: includes/functions.php:399
+#: includes/functions.php:425
 msgid "Feb"
 msgstr ""
 
-#: includes/functions.php:400
+#: includes/functions.php:426
 msgid "Mar"
 msgstr ""
 
-#: includes/functions.php:401
+#: includes/functions.php:427
 msgid "Apr"
 msgstr ""
 
-#: includes/functions.php:402
+#: includes/functions.php:428
 msgid "May"
 msgstr ""
 
-#: includes/functions.php:403
+#: includes/functions.php:429
 msgid "Jun"
 msgstr ""
 
-#: includes/functions.php:404
+#: includes/functions.php:430
 msgid "Jul"
 msgstr ""
 
-#: includes/functions.php:405
+#: includes/functions.php:431
 msgid "Aug"
 msgstr ""
 
-#: includes/functions.php:406
+#: includes/functions.php:432
 msgid "Sep"
 msgstr ""
 
-#: includes/functions.php:407
+#: includes/functions.php:433
 msgid "Oct"
 msgstr ""
 
-#: includes/functions.php:408
+#: includes/functions.php:434
 msgid "Nov"
 msgstr ""
 
-#: includes/functions.php:409
+#: includes/functions.php:435
 msgid "Dec"
 msgstr ""
 
-#: includes/functions.php:422
+#: includes/functions.php:448
 msgid "Last Year"
 msgstr ""
 
-#: includes/functions.php:428
+#: includes/functions.php:454
 msgid "This Year"
 msgstr ""
 
-#: includes/functions.php:474
+#: includes/functions.php:500
 msgid "Mon"
 msgstr ""
 
-#: includes/functions.php:475
+#: includes/functions.php:501
 msgid "Tue"
 msgstr ""
 
-#: includes/functions.php:476
+#: includes/functions.php:502
 msgid "Wed"
 msgstr ""
 
-#: includes/functions.php:477
+#: includes/functions.php:503
 msgid "Thu"
 msgstr ""
 
-#: includes/functions.php:478
+#: includes/functions.php:504
 msgid "Fri"
 msgstr ""
 
-#: includes/functions.php:479
+#: includes/functions.php:505
 msgid "Sat"
 msgstr ""
 
-#: includes/functions.php:480
+#: includes/functions.php:506
 msgid "Sun"
 msgstr ""
 
-#: includes/functions.php:497
+#: includes/functions.php:523
 msgid "Last Week"
 msgstr ""
 
-#: includes/functions.php:505
+#: includes/functions.php:531
 msgid "This Week"
 msgstr ""
 
-#: includes/functions.php:615
+#: includes/functions.php:581
+msgid "Last Month"
+msgstr ""
+
+#: includes/functions.php:589
+msgid "This Month"
+msgstr ""
+
+#: includes/functions.php:701
 #: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:61
 msgid "Show Google Analytics"
 msgstr ""
 
-#: includes/functions.php:617
+#: includes/functions.php:703
 msgid "Analytics"
 msgstr ""
 
-#: includes/functions.php:619
+#: includes/functions.php:705
 msgid "Refresh"
 msgstr ""
 
-#: includes/functions.php:619
+#: includes/functions.php:705
 msgid "Active Users:"
 msgstr ""
 
-#: includes/functions.php:624
+#: includes/functions.php:710
 msgid "Last Week vs This Week"
 msgstr ""
 
-#: includes/functions.php:625
+#: includes/functions.php:711
+msgid "This Month vs Last Month"
+msgstr ""
+
+#: includes/functions.php:712
 msgid "This Year vs Last Year"
 msgstr ""
 
-#: includes/functions.php:626
+#: includes/functions.php:713
 msgid "Top Countries"
 msgstr ""
 
