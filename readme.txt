@@ -3,8 +3,8 @@ Contributors: stiofansisland, paoltaia
 Donate link: https://wpgeodirectory.com/
 Tags: geodirectory, google analytics, geodirectory google analytics
 Requires at least: 4.9
-Tested up to: 5.2
-Stable tag: 2.0.0.4
+Tested up to: 5.3
+Stable tag: 2.0.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,7 @@ An answer to that question.
 = 2.0.0.5 =
 * This Month vs Last Month option added in analytics stats view - ADDED
 * Allow UWP and BuddyPress profile owners to view their profile stats - ADDED
+* Changes for Google App Verification - CHANGED
 
 = 2.0.0.4 =
 * Analytics widget can now be placed on any page and shown to anyone - ADDED
