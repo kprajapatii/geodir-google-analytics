@@ -1,27 +1,23 @@
 <?php
-
 /**
- * The plugin bootstrap file
+ * GeoDirectory Google Analytics
  *
- * This file is read by WordPress to generate the plugin information in the plugin
- * Dashboard. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * this starts the plugin.
- *
- * @since             1.0.0
  * @package           GeoDir_Google_Analytics
+ * @author            AyeCode Ltd
+ * @copyright         2019 AyeCode Ltd
+ * @license           GPLv3
  *
  * @wordpress-plugin
  * Plugin Name:       GeoDirectory Google Analytics
- * Plugin URI:        https://wpgeodirectory.com
- * Description:       Allows Google Analytics tracking for GeoDirectory listings.
+ * Plugin URI:        https://wpgeodirectory.com/downloads/google-analytics/
+ * Description:       Allows Google Analytics tracking for the listings.
  * Version:           2.0.0.5
- * Author:            GeoDirectory
- * Author URI:        https://wpgeodirectory.com/
  * Requires at least: 4.9
- * Tested up to:      5.3
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Requires PHP:      5.6
+ * Author:            AyeCode Ltd
+ * Author URI:        https://ayecode.io
+ * License:           GPLv3
+ * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       geodir-ga
  * Domain Path:       /languages
  * Update URL:        https://github.com/AyeCode/geodir-google-analytics/
@@ -30,11 +26,15 @@
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
-    die;
+	die;
 }
 
 if ( !defined( 'GEODIR_GA_VERSION' ) ) {
 	define( 'GEODIR_GA_VERSION', '2.0.0.5' );
+}
+
+if ( ! defined( 'GEODIR_GA_MIN_CORE' ) ) {
+	define( 'GEODIR_GA_MIN_CORE', '2.1.0.0-beta' );
 }
 
 /**
@@ -51,6 +51,11 @@ function geodir_google_analytics() {
 
 	if ( !defined( 'GEODIR_GA_PLUGIN_FILE' ) ) {
 		define( 'GEODIR_GA_PLUGIN_FILE', __FILE__ );
+	}
+
+	// Min core version check
+	if ( ! function_exists( 'geodir_min_version_check' ) || ! geodir_min_version_check( 'Google Analytics', GEODIR_GA_MIN_CORE ) ) {
+		return '';
 	}
 
 	/**

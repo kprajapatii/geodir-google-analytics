@@ -1,18 +1,25 @@
 === GeoDirectory Google Analytics ===
-Contributors: stiofansisland, paoltaia
-Donate link: https://wpgeodirectory.com/
-Tags: geodirectory, google analytics, geodirectory google analytics
+Contributors: stiofansisland, paoltaia, ayecode
+Donate link: https://wpgeodirectory.com
+Tags: geodirectory, google analytics, geodirectory google analytics, tracking
 Requires at least: 4.9
-Tested up to: 5.3
+Tested up to: 5.5
+Requires PHP: 5.6
 Stable tag: 2.0.0.5
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Allows Google Analytics tracking for GeoDirectory listings (requires GDv2).
+Allows Google Analytics tracking for the listings.
 
 == Description ==
 
-This plugin allows Google Analytics tracking for GeoDirectory listings.
+= *** This addon requires GeoDirectory V2 *** =
+
+= Add frontend Analytics for your users viewing =
+
+The GeoDirectory Google Analytics addon lets you easily add Google analytics tracking to your listings.
+
+A widget/shortcode/block is provided to be able to show basic Google Analytics stats on the details page, you can choose to show this to listing owners and the admins, just the admins or to everyone including non logged in users.
 
 == Installation ==
 
@@ -29,6 +36,9 @@ An answer to that question.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.1.0.0 =
+* Changes for AyeCode UI compatibility - CHANGED
 
 = 2.0.0.5 =
 * This Month vs Last Month option added in analytics stats view - ADDED
