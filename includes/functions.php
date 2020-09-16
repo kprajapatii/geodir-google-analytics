@@ -204,6 +204,32 @@ function geodir_ga_display_analytics($args = array()) {
 		return;
 	}
 
+	$design_style = geodir_design_style();
+
+	if ( empty( $args['height'] ) || absint( $args['height'] ) < 100 ) {
+		$args['height'] = 200;
+	}
+
+	if ( $design_style ) {
+		if ( empty( $args['btn_color'] ) ) {
+			$args['btn_color'] = 'primary';
+		}
+
+		if ( $args['btn_size'] ) {
+			switch ( $args['btn_size'] ) {
+				case 'small':
+					$args['btn_size'] = 'sm';
+				break;
+				case 'large':
+					$args['btn_size'] = 'lg';
+				break;
+				case 'medium':
+					$args['btn_size'] = '';
+				break;
+			}
+		}
+	}
+
     ob_start(); // Start buffering;
     /**
      * This is called before the edit post link html in the function geodir_detail_page_google_analytics()
@@ -388,7 +414,7 @@ function gd_renderTopCountriesChart() {
 }
 
 function gdga_noResults() {
-	jQuery('#gdga-chart-container').html('<?php _e('No results available','geodir-ga');?>');
+	jQuery('#gdga-chart-container').html('<p><?php _e('No results available','geodir-ga');?></p>');
 	jQuery('#gdga-legend-container').html('');
 }
 
@@ -631,7 +657,11 @@ function generateLegend(id, items) {
 	legend.innerHTML = items.map(function(item) {
 		var color = item.color || item.fillColor;
 		var label = item.label;
+		<?php if ( $design_style ) { ?>
+		return '<div class="btn btn-sm m-auto shadow-none py-0 px-3"><i style="background:' + color + '" class="mr-1 badge badge-pill p-2 d-inline-block align-middle"></i><span class="d-inline-block align-middle">' + label + '</span></div>';
+		<?php } else { ?>
 		return '<li><i style="background:' + color + '"></i>' + label + '</li>';
+		<?php } ?>
 	}).join('');
 }
 
@@ -670,6 +700,61 @@ function gdga_refresh(stop) {
 	}
 }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<?php if ( $design_style ) {
+	$btn_class = '';
+	if ( ! empty( $args['btn_color'] ) ) {
+		$btn_class .= ' btn-' . sanitize_html_class( $args['btn_color'] );
+	}
+	if ( ! empty( $args['btn_size'] ) ) {
+		$btn_class .= ' btn-' . sanitize_html_class( $args['btn_size'] );
+	}
+	$btn_wrap_class = ' text-left';
+	if ( ! empty( $args['btn_alignment'] ) ) {
+		if ( $args['btn_alignment'] == 'block' ) {
+			$btn_class .= ' w-100';
+			$btn_wrap_class = '';
+		} else {
+			$btn_wrap_class .= ' text-' . sanitize_html_class( $args['btn_alignment'] );
+		}
+	}
+	?>
+		<div class="gdga-show-analytics<?php echo $btn_wrap_class; ?>"><button role="button" class="btn<?php echo $btn_class; ?>"><i class="fas fa-chart-bar mr-1" aria-hidden="true"></i><?php echo ! empty( $args['button_text'] ) ? esc_attr( $args['button_text'] ) : __('Show Google Analytics', 'geodir-ga');?></button></div>
+		<div id="ga_stats" class="gdga-analytics-box card" style="display:none">
+			<div class="card-header p-3">
+				<div class="gd-ActiveUsers btn btn-sm btn-info float-right py-1 px-2 align-middle"><span id="gdga-loader-icon" class="mr-1" title="<?php esc_attr_e("Refresh", 'geodir-ga');?>"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i></span><?php _e("Active Users:", 'geodir-ga');?> <span class="gd-ActiveUsers-value badge badge-light badge-pill">0</span></div>
+				<div id="ga-analytics-title" class="h5 m-0 card-title align-middle"><i class="fas fa-chart-bar mr-1" aria-hidden="true"></i><?php _e("Analytics", 'geodir-ga');?></div>
+			</div>
+			<div class="card-body">
+				<div class="gdga-type-container form-group" style="display:none">
+					<?php
+					echo aui()->select( array(
+						'id' => 'gdga-select-analytic',
+						'name' => '',
+						'title' => '',
+						'placeholder' => '',
+						'value' => '',
+						'label_show' => false,
+						'label' => '',
+						'options' => array(
+							'weeks' => __( "Last Week vs This Week", 'geodir-ga' ),
+							'months' => __( "This Month vs Last Month", 'geodir-ga' ),
+							'years' => __( "This Year vs Last Year", 'geodir-ga' ),
+							'country' => __( "Top Countries", 'geodir-ga' ),
+						),
+						'select2' => true,
+						'extra_attributes' => array(
+							'onchange' => 'gdga_select_option();'
+						),
+					) );
+					?>
+				</div>
+				<div class="Chartjs-figure w-100" id="gdga-chart-container" style="display:none;height:<?php echo absint( $args['height'] ); ?>px"></div>
+				<div class="Chartjs-legend pt-4 text-center" id="gdga-legend-container"></div>
+			</div>
+		</div>
+<?php } else { ?>
 <style>
 #gdga-chart-container{clear:both}
 .gdga-type-container{width:100%;display:block;clear:both}
@@ -680,7 +765,7 @@ function gdga_refresh(stop) {
 #ga_stats #ga-analytics-title{float:left;font-weight:bold}
 #ga_stats #gd-active-users-container{float:right}
 .Chartjs{font-size:.85em}
-.Chartjs-figure{height:200px;width:100%;display:none}
+.Chartjs-figure{height:<?php echo absint( $args['height'] ); ?>px;width:100%;display:none}
 .Chartjs-legend{list-style:none;margin:0;padding:1em 0 0;text-align:center;width:100%;display:none}
 .Chartjs-legend>li{display:inline-block;padding:.25em .5em}
 .Chartjs-legend>li>i{display:inline-block;height:1em;margin-right:.5em;vertical-align:-.1em;width:1em}
@@ -696,8 +781,6 @@ function gdga_refresh(stop) {
 #gdga-loader-icon svg,#gdga-loader-icon i{margin:0 10px 0 -10px;color:#333333;cursor:pointer}
 .#gdga-loader-icon .fa-spin{-webkit-animation-duration:1.5s;animation-duration:1.5s}
  </style>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
         <button type="button" class="gdga-show-analytics"><?php echo !empty($args['button_text']) ? esc_attr($args['button_text']) : __('Show Google Analytics', 'geodir-ga');?></button>
         <span id="ga_stats" class="gdga-analytics-box" style="display:none">
             <div id="ga-analytics-title"><?php _e("Analytics", 'geodir-ga');?></div>
@@ -716,7 +799,7 @@ function gdga_refresh(stop) {
             <div class="Chartjs-figure" id="gdga-chart-container"></div>
             <ol class="Chartjs-legend" id="gdga-legend-container"></ol>
         </span>
-
+<?php } ?>
     <?php
     }
     /**
@@ -726,8 +809,10 @@ function gdga_refresh(stop) {
      */
     do_action('geodir_after_google_analytics');
     $content_html = ob_get_clean();
-    if (trim($content_html) != '')
+    if ( trim( $content_html ) != '' ) {
         $content_html = '<div class="geodir-details-sidebar-google-analytics">' . $content_html . '</div>';
+	}
+
     if ((int)geodir_get_option('geodir_disable_google_analytics_section') != 1) {
         /**
          * Filter the geodir_edit_post_link() function content.

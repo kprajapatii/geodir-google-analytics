@@ -121,6 +121,7 @@ class GeoDir_Google_Analytics {
 		add_action( 'widgets_init', 'goedir_ga_register_widgets', 11 );
 		add_action( 'geodir_detail_page_widget_id_bases', array( $this, 'set_widget_id_bases' ), 10, 1 );
 		add_action( 'geodir_get_post_package', array( $this, 'package_default_value' ), -1, 3 );
+		add_filter( 'geodir_pricing_package_features', array( $this, 'pricing_package_features' ), 11, 4 );
 		add_filter( 'geodir_params', array( $this, 'scripts_params' ), 10, 1 );
 	}
 
@@ -230,5 +231,24 @@ class GeoDir_Google_Analytics {
 		$id_bases[] = 'gd_google_analytics';
 		
 		return $id_bases;
+	}
+
+	public static function pricing_package_features( $features, $package, $params, $args ) {
+		$feature = array( 
+			'order' => 8.4,
+			'text' => __( 'Google Analytics', 'geodir-ga' )
+		);
+
+		if ( geodir_pricing_get_meta( $package->id, 'google_analytics', true ) ) {
+			$feature['icon'] = $params['fa_icon_tick'];
+			$feature['color'] = $params['color_highlight'];
+		} else {
+			$feature['icon'] = $params['fa_icon_untick'];
+			$feature['color'] = $params['color_default'];
+		}
+
+		$features['google_analytics'] = $feature;
+
+		return $features;
 	}
 }
