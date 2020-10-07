@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: GeoDirectory - Google Analytics 2.0.0.5\n"
+"Project-Id-Version: GeoDirectory - Google Analytics 2.1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-30 17:37+0000\n"
-"PO-Revision-Date: 2020-01-30 17:38+0000\n"
+"POT-Creation-Date: 2020-10-07 17:26+0530\n"
+"PO-Revision-Date: 2020-10-07 17:26+0530\n"
 "Last-Translator: \n"
 "Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
 "Language: en_US\n"
@@ -15,13 +15,14 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: includes/admin/admin-functions.php:26
 #: includes/admin/class-geodir-google-analytics-admin.php:89
 #: includes/admin/settings/class-geodir-settings-analytics.php:27
 #: includes/admin/settings/class-geodir-settings-analytics.php:79
+#: includes/class-geodir-google-analytics.php:239
 msgid "Google Analytics"
 msgstr ""
 
@@ -136,13 +137,13 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: includes/class-geodir-google-analytics.php:170
+#: includes/class-geodir-google-analytics.php:171
 msgid ""
 "GeoDirectory plugin is required for the GeoDirectory Google Analytics plugin "
 "to work properly."
 msgstr ""
 
-#: includes/class-geodir-google-analytics.php:217
+#: includes/class-geodir-google-analytics.php:218
 msgid "Are you wish to Deauthorize and break Analytics?"
 msgstr ""
 
@@ -159,140 +160,140 @@ msgstr ""
 msgid "Login failed"
 msgstr ""
 
-#: includes/functions.php:391
+#: includes/functions.php:417
 msgid "No results available"
 msgstr ""
 
-#: includes/functions.php:424
+#: includes/functions.php:450
 msgid "Jan"
 msgstr ""
 
-#: includes/functions.php:425
+#: includes/functions.php:451
 msgid "Feb"
 msgstr ""
 
-#: includes/functions.php:426
+#: includes/functions.php:452
 msgid "Mar"
 msgstr ""
 
-#: includes/functions.php:427
+#: includes/functions.php:453
 msgid "Apr"
 msgstr ""
 
-#: includes/functions.php:428
+#: includes/functions.php:454
 msgid "May"
 msgstr ""
 
-#: includes/functions.php:429
+#: includes/functions.php:455
 msgid "Jun"
 msgstr ""
 
-#: includes/functions.php:430
+#: includes/functions.php:456
 msgid "Jul"
 msgstr ""
 
-#: includes/functions.php:431
+#: includes/functions.php:457
 msgid "Aug"
 msgstr ""
 
-#: includes/functions.php:432
+#: includes/functions.php:458
 msgid "Sep"
 msgstr ""
 
-#: includes/functions.php:433
+#: includes/functions.php:459
 msgid "Oct"
 msgstr ""
 
-#: includes/functions.php:434
+#: includes/functions.php:460
 msgid "Nov"
 msgstr ""
 
-#: includes/functions.php:435
+#: includes/functions.php:461
 msgid "Dec"
 msgstr ""
 
-#: includes/functions.php:448
+#: includes/functions.php:474
 msgid "Last Year"
 msgstr ""
 
-#: includes/functions.php:454
+#: includes/functions.php:480
 msgid "This Year"
 msgstr ""
 
-#: includes/functions.php:500
+#: includes/functions.php:526
 msgid "Mon"
 msgstr ""
 
-#: includes/functions.php:501
+#: includes/functions.php:527
 msgid "Tue"
 msgstr ""
 
-#: includes/functions.php:502
+#: includes/functions.php:528
 msgid "Wed"
 msgstr ""
 
-#: includes/functions.php:503
+#: includes/functions.php:529
 msgid "Thu"
 msgstr ""
 
-#: includes/functions.php:504
+#: includes/functions.php:530
 msgid "Fri"
 msgstr ""
 
-#: includes/functions.php:505
+#: includes/functions.php:531
 msgid "Sat"
 msgstr ""
 
-#: includes/functions.php:506
+#: includes/functions.php:532
 msgid "Sun"
 msgstr ""
 
-#: includes/functions.php:523
+#: includes/functions.php:549
 msgid "Last Week"
 msgstr ""
 
-#: includes/functions.php:531
+#: includes/functions.php:557
 msgid "This Week"
 msgstr ""
 
-#: includes/functions.php:581
+#: includes/functions.php:607
 msgid "Last Month"
 msgstr ""
 
-#: includes/functions.php:589
+#: includes/functions.php:615
 msgid "This Month"
 msgstr ""
 
-#: includes/functions.php:701
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:61
+#: includes/functions.php:723 includes/functions.php:784
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:80
 msgid "Show Google Analytics"
 msgstr ""
 
-#: includes/functions.php:703
-msgid "Analytics"
-msgstr ""
-
-#: includes/functions.php:705
+#: includes/functions.php:726 includes/functions.php:788
 msgid "Refresh"
 msgstr ""
 
-#: includes/functions.php:705
+#: includes/functions.php:726 includes/functions.php:788
 msgid "Active Users:"
 msgstr ""
 
-#: includes/functions.php:710
+#: includes/functions.php:727 includes/functions.php:786
+msgid "Analytics"
+msgstr ""
+
+#: includes/functions.php:741 includes/functions.php:793
 msgid "Last Week vs This Week"
 msgstr ""
 
-#: includes/functions.php:711
+#: includes/functions.php:742 includes/functions.php:794
 msgid "This Month vs Last Month"
 msgstr ""
 
-#: includes/functions.php:712
+#: includes/functions.php:743 includes/functions.php:795
 msgid "This Year vs Last Year"
 msgstr ""
 
-#: includes/functions.php:713
+#: includes/functions.php:744 includes/functions.php:796
 msgid "Top Countries"
 msgstr ""
 
@@ -304,42 +305,120 @@ msgstr ""
 msgid "GD > Google Analytics"
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:50
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:61
 msgid "Title:"
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:51
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:62
 msgid "The widget title:"
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:58
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:69
+msgid "Chart Height:"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:70
+msgid "Chart height in px. Default: 200"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:77
 msgid "Button text:"
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:59
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:78
 msgid "The text to use for the button to show the analytics:"
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:67
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:86
 msgid "Google Analytics visible to:"
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:68
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:87
 msgid "Google Analytics will be visible to selected users only."
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:71
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:90
 msgid "Owner/Administrator"
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:72
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:91
 msgid "Administrator"
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:73
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:92
 msgid "Everyone logged in"
 msgstr ""
 
-#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:74
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:93
 msgid "Everyone"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:103
+msgid "Button Color:"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:104
+msgid "Analytics button color."
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:106
+msgid "Default (primary)"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:111
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:127
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:144
+msgid "Design"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:116
+msgid "Button Size:"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:117
+msgid "Analytics button size."
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:119
+msgid "Default (medium)"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:120
+msgid "Small"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:121
+msgid "Medium"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:122
+msgid "Large"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:132
+msgid "Button Position:"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:133
+msgid "Analytics button alignment."
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:135
+msgid "Default (left)"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:136
+msgid "Left"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:137
+msgid "Center"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:138
+msgid "Right"
+msgstr ""
+
+#: includes/widgets/class-geodir-google-analytics-widget-post-analytics.php:139
+msgid "Block"
 msgstr ""
