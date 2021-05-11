@@ -39,6 +39,7 @@ An answer to that question.
 
 = 2.1.0.1 =
 * Fix conflicts with Uncanny Automator Pro plugin - FIXED
+* Chart.js updated to v3.2 - CHANGED
 
 = 2.1.0.0 =
 * Changes for AyeCode UI compatibility - CHANGED

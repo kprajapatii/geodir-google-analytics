@@ -98,7 +98,7 @@ function geodir_ga_get_analytics( $page, $ga_start, $ga_end ) {
         $dimensions = "ga:month,ga:nthMonth";
     } elseif (isset($_REQUEST['ga_type']) && $_REQUEST['ga_type'] == 'country') {
         $start_date = "14daysAgo";
-        $end_date = "yesterday";
+        $end_date = "today";
         $dimensions = "ga:country";
         $sort = "-ga:pageviews";
         $limit  = 5;
@@ -269,10 +269,10 @@ ga_data6 = false;
 ga_au = 0;
 jQuery(document).ready(function() {
 	// Set some global Chart.js defaults.
-	Chart.defaults.global.animationSteps = 60;
-	Chart.defaults.global.animationEasing = 'easeInOutQuart';
-	Chart.defaults.global.responsive = true;
-	Chart.defaults.global.maintainAspectRatio = false;
+	Chart.defaults.animationSteps = 60;
+	Chart.defaults.animationEasing = 'easeInOutQuart';
+	Chart.defaults.responsive = true;
+	Chart.defaults.maintainAspectRatio = false;
 
 	jQuery('.gdga-show-analytics').click(function(e) {
 		jQuery(this).hide();
@@ -389,25 +389,33 @@ function gd_renderTopCountriesChart() {
 	}
 
 	jQuery('#gdga-chart-container').show();
-	jQuery('#gdga-legend-container').show();
 	gdga_refresh(true);
 	jQuery('.gdga-type-container').show();
 	jQuery('#gdga-select-analytic').prop('disabled', false);
 
-	var data = [];
+	var labels = [];
+	var values = [];
+	var bgcolors = [];
 	var colors = ['#4D5360', '#949FB1', '#D4CCC5', '#E2EAE9', '#F7464A'];
 
 	if (response.rows) {
 		response.rows.forEach(function(row, i) {
-			data.push({
-				label: row[0],
-				value: +row[1],
-				color: colors[i]
-			});
+			labels[i] = row[0];
+			values[i] = parseInt(row[1]);
+			bgcolors[i] = colors[i];
 		});
 
-		new Chart(makeCanvas('gdga-chart-container')).Doughnut(data);
-		generateLegend('gdga-legend-container', data);
+		var data = {
+			labels: labels,
+			datasets: [{
+				label: 'Countries',
+				data: values,
+				backgroundColor: bgcolors,
+				hoverOffset: 4
+			}]
+		};console.log(data);
+
+		new Chart(makeCanvas('gdga-chart-container'),{type:'doughnut',data:data});
 	} else {
 		gdga_noResults();
 	}
@@ -415,7 +423,6 @@ function gd_renderTopCountriesChart() {
 
 function gdga_noResults() {
 	jQuery('#gdga-chart-container').html('<p><?php _e('No results available','geodir-ga');?></p>');
-	jQuery('#gdga-legend-container').html('');
 }
 
 /**
@@ -434,7 +441,6 @@ function gd_renderYearOverYearChart() {
 	}
 
 	jQuery('#gdga-chart-container').show();
-	jQuery('#gdga-legend-container').show();
 	gdga_refresh(true);
 	jQuery('.gdga-type-container').show();
 	jQuery('#gdga-select-analytic').prop('disabled', false);
@@ -485,8 +491,7 @@ function gd_renderYearOverYearChart() {
 			]
 		};
 
-		new Chart(makeCanvas('gdga-chart-container')).Bar(data);
-		generateLegend('gdga-legend-container', data.datasets);
+		new Chart(makeCanvas('gdga-chart-container'),{type:'bar',data:data});
 	}).catch(function(err) {
 		console.error(err.stack);
 	})
@@ -508,7 +513,6 @@ function gd_renderWeekOverWeekChart() {
 	}
 
 	jQuery('#gdga-chart-container').show();
-	jQuery('#gdga-legend-container').show();
 	gdga_refresh(true);
 	jQuery('.gdga-type-container').show();
 	jQuery('#gdga-select-analytic').prop('disabled', false);
@@ -564,8 +568,7 @@ function gd_renderWeekOverWeekChart() {
 			]
 		};
 
-		new Chart(makeCanvas('gdga-chart-container')).Line(data);
-		generateLegend('gdga-legend-container', data.datasets);
+		new Chart(makeCanvas('gdga-chart-container'),{type:'line',data:data});
 	});
 }
 
@@ -580,7 +583,6 @@ function gd_renderMonthOverMonthChart() {
 	}
 
 	jQuery('#gdga-chart-container').show();
-	jQuery('#gdga-legend-container').show();
 	gdga_refresh(true);
 	jQuery('.gdga-type-container').show();
 	jQuery('#gdga-select-analytic').prop('disabled', false);
@@ -622,8 +624,7 @@ function gd_renderMonthOverMonthChart() {
 			]
 		};
 
-		new Chart(makeCanvas('gdga-chart-container')).Line(data);
-		generateLegend('gdga-legend-container', data.datasets);
+		new Chart(makeCanvas('gdga-chart-container'),{type:'line',data:data});
 	});
 }
 
@@ -644,25 +645,6 @@ function makeCanvas(id) {
 	container.appendChild(canvas);
 
 	return ctx;
-}
-
-/**
- * Create a visual legend inside the specified element based off of a
- * Chart.js dataset.
- * @param {string} id The id attribute of the element to host the legend.
- * @param {Array.<Object>} items A list of labels and colors for the legend.
- */
-function generateLegend(id, items) {
-	var legend = document.getElementById(id);
-	legend.innerHTML = items.map(function(item) {
-		var color = item.color || item.fillColor;
-		var label = item.label;
-		<?php if ( $design_style ) { ?>
-		return '<div class="btn btn-sm m-auto shadow-none py-0 px-3"><i style="background:' + color + '" class="mr-1 badge badge-pill p-2 d-inline-block align-middle"></i><span class="d-inline-block align-middle">' + label + '</span></div>';
-		<?php } else { ?>
-		return '<li><i style="background:' + color + '"></i>' + label + '</li>';
-		<?php } ?>
-	}).join('');
 }
 
 function gdga_select_option() {
@@ -687,21 +669,21 @@ function gdga_refresh(stop) {
 		if (gd_gaAutoRefresh === 1 || gd_gaHideRefresh == 1) {
 			jQuery('#gdga-loader-icon').hide();
 		} else {
-			jQuery('#gdga-loader-icon .fa-refresh').removeClass('fa-spin');
+			jQuery('#gdga-loader-icon .fa-sync').removeClass('fa-spin');
 		}
 	} else {
 		if (gd_gaAutoRefresh === 1 || gd_gaHideRefresh == 1) {
 			jQuery('#gdga-loader-icon').show();
 		} else {
-			if (!jQuery('#gdga-loader-icon .fa-refresh').hasClass('fa-spin')) {
-				jQuery('#gdga-loader-icon .fa-refresh').addClass('fa-spin');
+			if (!jQuery('#gdga-loader-icon .fa-sync').hasClass('fa-spin')) {
+				jQuery('#gdga-loader-icon .fa-sync').addClass('fa-spin');
 			}
 		}
 	}
 }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <?php if ( $design_style ) {
 	$btn_class = '';
 	if ( ! empty( $args['btn_color'] ) ) {
@@ -723,7 +705,7 @@ function gdga_refresh(stop) {
 		<div class="gdga-show-analytics<?php echo $btn_wrap_class; ?>"><button role="button" class="btn<?php echo $btn_class; ?>"><i class="fas fa-chart-bar mr-1" aria-hidden="true"></i><?php echo ! empty( $args['button_text'] ) ? esc_attr( $args['button_text'] ) : __('Show Google Analytics', 'geodir-ga');?></button></div>
 		<div id="ga_stats" class="gdga-analytics-box card" style="display:none">
 			<div class="card-header p-3">
-				<div class="gd-ActiveUsers btn btn-sm btn-info float-right py-1 px-2 align-middle"><span id="gdga-loader-icon" class="mr-1" title="<?php esc_attr_e("Refresh", 'geodir-ga');?>"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i></span><?php _e("Active Users:", 'geodir-ga');?> <span class="gd-ActiveUsers-value badge badge-light badge-pill">0</span></div>
+				<div class="gd-ActiveUsers btn btn-sm btn-info float-right py-1 px-2 align-middle"><span id="gdga-loader-icon" class="mr-1" title="<?php esc_attr_e("Refresh", 'geodir-ga');?>"><i class="fas fa-sync fa-spin" aria-hidden="true"></i></span><?php _e("Active Users:", 'geodir-ga');?> <span class="gd-ActiveUsers-value badge badge-light badge-pill">0</span></div>
 				<div id="ga-analytics-title" class="h5 m-0 card-title align-middle"><i class="fas fa-chart-bar mr-1" aria-hidden="true"></i><?php _e("Analytics", 'geodir-ga');?></div>
 			</div>
 			<div class="card-body">
@@ -751,7 +733,6 @@ function gdga_refresh(stop) {
 					?>
 				</div>
 				<div class="Chartjs-figure w-100" id="gdga-chart-container" style="display:none;height:<?php echo absint( $args['height'] ); ?>px"></div>
-				<div class="Chartjs-legend pt-4 text-center" id="gdga-legend-container"></div>
 			</div>
 		</div>
 <?php } else { ?>
@@ -785,7 +766,7 @@ function gdga_refresh(stop) {
         <span id="ga_stats" class="gdga-analytics-box" style="display:none">
             <div id="ga-analytics-title"><?php _e("Analytics", 'geodir-ga');?></div>
             <div id="gd-active-users-container">
-                <div class="gd-ActiveUsers"><span id="gdga-loader-icon" title="<?php esc_attr_e("Refresh", 'geodir-ga');?>"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i></span><?php _e("Active Users:", 'geodir-ga');?> <b class="gd-ActiveUsers-value">0</b>
+                <div class="gd-ActiveUsers"><span id="gdga-loader-icon" title="<?php esc_attr_e("Refresh", 'geodir-ga');?>"><i class="fas fa-sync fa-spin" aria-hidden="true"></i></span><?php _e("Active Users:", 'geodir-ga');?> <b class="gd-ActiveUsers-value">0</b>
                 </div>
             </div>
             <div class="gdga-type-container" style="display:none">
@@ -797,7 +778,6 @@ function gdga_refresh(stop) {
 				</select>
 			</div>
             <div class="Chartjs-figure" id="gdga-chart-container"></div>
-            <ol class="Chartjs-legend" id="gdga-legend-container"></ol>
         </span>
 <?php } ?>
     <?php
