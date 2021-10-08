@@ -160,6 +160,13 @@ class GeoDir_Google_Analytics_Widget_Post_Analytics extends WP_Super_Duper {
 	public function output( $args = array(), $widget_args = array(), $content = '' ) {
 		global $post, $preview;
 
+		$is_preview = $this->is_preview();
+		$block_preview = $this->is_block_content_call() || $is_preview;
+
+		if ( $block_preview ) {
+			return '';
+		}
+
 		if ( $preview || empty( $post ) ) {
 			return;
 		}

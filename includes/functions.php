@@ -6,10 +6,20 @@
  * @package GeoDirectory
  */
 
-function goedir_ga_register_widgets() {
+/**
+ * Register widgets.
+ *
+ * @since 2.0.0.0
+ *
+ * @param array $widgets The list of available widgets.
+ * @return array Available GD widgets.
+ */
+function goedir_ga_register_widgets( $widgets ) {
 	if ( get_option( 'geodir_ga_version' ) ) {
-		register_widget( 'GeoDir_Google_Analytics_Widget_Post_Analytics' );
+		$widgets[] = 'GeoDir_Google_Analytics_Widget_Post_Analytics';
 	}
+
+	return $widgets;
 }
 
 /**

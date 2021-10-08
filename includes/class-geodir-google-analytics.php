@@ -118,7 +118,7 @@ class GeoDir_Google_Analytics {
 			add_action( 'wp_head', 'geodir_ga_add_tracking_code' );
 		}
  
-		add_action( 'widgets_init', 'goedir_ga_register_widgets', 11 );
+		add_action( 'geodir_get_widgets', 'goedir_ga_register_widgets', 11, 1 );
 		add_action( 'geodir_detail_page_widget_id_bases', array( $this, 'set_widget_id_bases' ), 10, 1 );
 		add_action( 'geodir_get_post_package', array( $this, 'package_default_value' ), -1, 3 );
 		add_filter( 'geodir_pricing_package_features', array( $this, 'pricing_package_features' ), 11, 4 );
