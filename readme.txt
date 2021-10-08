@@ -3,9 +3,9 @@ Contributors: stiofansisland, paoltaia, ayecode
 Donate link: https://wpgeodirectory.com
 Tags: geodirectory, google analytics, geodirectory google analytics, tracking
 Requires at least: 4.9
-Tested up to: 5.7
+Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.1.0.1
+Stable tag: 2.1.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -36,6 +36,9 @@ An answer to that question.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.1.1.0 =
+* Prevent the block/widget class loading when not required - CHANGED
 
 = 2.1.0.1 =
 * Fix conflicts with Uncanny Automator Pro plugin - FIXED
