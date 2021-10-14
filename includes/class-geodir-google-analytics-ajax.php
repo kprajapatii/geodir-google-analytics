@@ -49,21 +49,31 @@ class GeoDir_Google_Analytics_AJAX {
 	}
 
 	public static function ga_stats() {
-		if ( isset( $_REQUEST['ga_start'] ) ) {
-			$ga_start = $_REQUEST['ga_start'];
-		} else {
-			$ga_start = '';
+		$referer = wp_get_referer();
+
+		$page = isset( $_REQUEST['ga_page'] ) ? urldecode( $_REQUEST['ga_page'] ) : '';
+		$page_token = isset( $_REQUEST['pt'] ) ? sanitize_text_field( $_REQUEST['pt'] ) : '';
+
+		if (
+			$referer
+			&& $page
+			&& $page_token
+			&& $referer !== wp_unslash( $_SERVER['REQUEST_URI'] )
+			&& $referer !== home_url() . wp_unslash( $_SERVER['REQUEST_URI'] )
+			&& ( ( untrailingslashit( home_url() ) . $page ) == $referer || ( strpos( $referer, home_url() ) === 0 && strpos( $referer, $page ) > 0 ) )
+			&& geodir_ga_validate_page_access_token( $page_token, $page )
+		) {
+			$start = isset( $_REQUEST['ga_start'] ) ? sanitize_file_name( $_REQUEST['ga_start'] ) : '';
+			$end = isset( $_REQUEST['ga_end'] ) ? sanitize_file_name( $_REQUEST['ga_end'] ) : '';
+
+			try {
+				geodir_ga_get_analytics( $page, $start, $end );
+			} catch ( Exception $e ) {
+				echo json_encode( array() );
+				geodir_error_log( wp_sprintf( __( 'GD Google Analytics API Error(%s) : %s', 'geodir-ga' ), $e->getCode(), $e->getMessage() ) );
+			}
 		}
-		if ( isset( $_REQUEST['ga_end'] ) ) {
-			$ga_end = $_REQUEST['ga_end'];
-		} else {
-			$ga_end = '';
-		}
-		try {
-			geodir_ga_get_analytics( $_REQUEST['ga_page'], $ga_start, $ga_end );
-		} catch ( Exception $e ) {
-			geodir_error_log( wp_sprintf( __( 'GD Google Analytics API Error(%s) : %s', 'geodir-ga' ), $e->getCode(), $e->getMessage() ) );
-		}
+
 		geodir_die();
 	}
 
@@ -87,8 +97,8 @@ class GeoDir_Google_Analytics_AJAX {
 		geodir_die();
 	}
 	
-	public static function ga_callback(){
-		if ( ! empty( $_REQUEST['code'] )) {
+	public static function ga_callback() {
+		if ( ! empty( $_REQUEST['code'] ) && current_user_can( 'manage_options' ) ) {
 			$oAuthURL = "https://www.googleapis.com/oauth2/v3/token?";
 			$code = "code=" . sanitize_text_field( $_REQUEST['code'] );
 			$grant_type = "&grant_type=authorization_code";

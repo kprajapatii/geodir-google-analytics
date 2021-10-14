@@ -37,6 +37,9 @@ An answer to that question.
 
 == Changelog ==
 
+= 2.1.1.1 =
+* Added some extra escaping to prevent XSS - CHANGED
+
 = 2.1.1.0 =
 * Prevent the block/widget class loading when not required - CHANGED
 
