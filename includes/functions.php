@@ -1,6 +1,6 @@
 <?php
 /**
- * Google analystics related functions.
+ * Google analytics related functions.
  *
  * @since 1.0.0
  * @package GeoDirectory
@@ -120,7 +120,7 @@ function geodir_ga_get_analytics( $page, $ga_start, $ga_end ) {
     # Create a new Gdata call
     $gaApi = new GeoDir_Google_Analytics_API();
 
-    # Check if Google sucessfully logged in
+    # Check if Google successfully logged in
     if ( ! $gaApi->checkLogin() ) {
         echo json_encode( array( 'error' => __( 'Please check Google Analytics Settings', 'geodir-ga' ) ) );
         return false;
@@ -155,12 +155,17 @@ function geodir_ga_get_token() {
     $response = wp_remote_get( $use_url, array( 'timeout' => 15 ) );
 
     if ( ! empty( $response['response']['code'] ) && $response['response']['code'] == 200 ) { // access token is valid
-		return $at;
+        return $at;
     } else { // get new access token
+        if ( ! current_user_can( 'manage_options' ) ) {
+            echo json_encode( array( 'error' => __( 'Invalid access.', 'geodir-ga' ) ) );
+            exit;
+        }
+
         $refresh_at = geodir_get_option( 'gd_ga_refresh_token' );
         if ( ! $refresh_at ) {
-            echo json_encode( array( 'error' => __( 'Not authorized, please click authorized in GD > Google analytic settings.', 'geodir-ga' ) ) );
-			exit;
+            echo json_encode( array( 'error' => __( 'Not authorized, please click authorized in GD > Google Analytics settings.', 'geodir-ga' ) ) );
+            exit;
         }
 
         $rat_url = "https://www.googleapis.com/oauth2/v3/token?";
@@ -178,7 +183,7 @@ function geodir_ga_get_token() {
             return $parts->access_token;
         } else {
             echo json_encode( array( 'error' => __( 'Login failed', 'geodir-ga' ) ) );
-			exit;
+            exit;
         }
     }
 }
@@ -270,6 +275,7 @@ var gd_gaTimeOut;
 var gd_gaTime = parseInt('<?php echo $refresh_time;?>');
 var gd_gaHideRefresh = <?php echo (int)$hide_refresh;?>;
 var gd_gaAutoRefresh = <?php echo $auto_refresh;?>;
+var gd_gaPageToken = "<?php echo geodir_ga_get_page_access_token( $args['user_roles'] ); ?>";
 ga_data1 = false;
 ga_data2 = false;
 ga_data3 = false;
@@ -301,47 +307,47 @@ jQuery(document).ready(function() {
 });
 
 function gdga_weekVSweek() {
-	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=thisweek'); ?>", success: function(result){
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=thisweek&pt='); ?>"+gd_gaPageToken, success: function(result){
 		ga_data1 = jQuery.parseJSON(result);
 		if(ga_data1.error){jQuery('#ga_stats').html(result);return;}
 		gd_renderWeekOverWeekChart();
 	}});
 
-	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=lastweek'); ?>", success: function(result){
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=lastweek&pt='); ?>"+gd_gaPageToken, success: function(result){
 		ga_data2 = jQuery.parseJSON(result);
 		gd_renderWeekOverWeekChart();
 	}});
 }
 
 function gdga_monthVSmonth() {
-	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=thismonth'); ?>", success: function(result){
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=thismonth&pt='); ?>"+gd_gaPageToken, success: function(result){
 		ga_data1 = jQuery.parseJSON(result);
 		if(ga_data1.error){jQuery('#ga_stats').html(result);return;}
 		gd_renderMonthOverMonthChart();
 	}});
 
-	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=lastmonth'); ?>", success: function(result){
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=lastmonth&pt='); ?>"+gd_gaPageToken, success: function(result){
 		ga_data2 = jQuery.parseJSON(result);
 		gd_renderMonthOverMonthChart();
 	}});
 }
 
 function gdga_yearVSyear() {
-	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=thisyear'); ?>", success: function(result){
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=thisyear&pt='); ?>"+gd_gaPageToken, success: function(result){
 		ga_data3 = jQuery.parseJSON(result);
 		if(ga_data3.error){jQuery('#ga_stats').html(result);return;}
 
 		gd_renderYearOverYearChart()
 	}});
 
-	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=lastyear'); ?>", success: function(result){
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=lastyear&pt='); ?>"+gd_gaPageToken, success: function(result){
 		ga_data4 = jQuery.parseJSON(result);
 		gd_renderYearOverYearChart()
 	}});
 }
 
 function gdga_country() {
-	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=country'); ?>", success: function(result){
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=country&pt='); ?>"+gd_gaPageToken, success: function(result){
 		ga_data5 = jQuery.parseJSON(result);
 		if(ga_data5.error){jQuery('#ga_stats').html(result);return;}
 		gd_renderTopCountriesChart();
@@ -349,7 +355,7 @@ function gdga_country() {
 }
 
 function gdga_realtime(dom_ready) {
-	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=realtime'); ?>", success: function(result) {
+	jQuery.ajax({url: "<?php echo admin_url('admin-ajax.php?action=geodir_ga_stats&ga_page='.$page_url.'&ga_type=realtime&pt='); ?>"+gd_gaPageToken, success: function(result) {
 		ga_data6 = jQuery.parseJSON(result);
 		if (ga_data6.error) {
 			jQuery('#ga_stats').html(result);
@@ -365,7 +371,7 @@ function gd_renderRealTime(dom_ready) {
 	}
 	ga_au_old = ga_au;
 
-	ga_au = ga_data6.totalsForAllResults["rt:activeUsers"];
+	ga_au = ga_data6 && ga_data6.length ? ga_data6.totalsForAllResults["rt:activeUsers"] : 0;
 	if (ga_au > ga_au_old) {
 		jQuery('.gd-ActiveUsers').addClass("is-increasing");
 	}
@@ -459,9 +465,8 @@ function gd_renderYearOverYearChart() {
 	var now = moment(); // .subtract(3, 'day');
 
 	Promise.all([thisYear, lastYear]).then(function(results) {
-		var data1 = results[0].rows.map(function(row) { return +row[2]; });
-		var data2 = results[1].rows.map(function(row) { return +row[2]; });
-		//var labelsN = results[0].rows.map(function(row) { return +row[1]; });
+		var data1 = results && results[0] && results[0].rows ? results[0].rows.map(function(row) { return +row[2]; }) : [];
+		var data2 = results && results[1] && results[1].rows ? results[1].rows.map(function(row) { return +row[2]; }) : [];
 
 		var labels = ['<?php _e('Jan', 'geodir-ga');?>',
 			'<?php _e('Feb', 'geodir-ga');?>',
@@ -531,9 +536,8 @@ function gd_renderWeekOverWeekChart() {
 	var now = moment();
 
 	Promise.all([thisWeek, lastWeek]).then(function(results) {
-		var data1 = results[0].rows.map(function(row) { return +row[2]; });
-		var data2 = results[1].rows.map(function(row) { return +row[2]; });
-		var labels = results[1].rows.map(function(row) { return +row[0]; });
+		var data1 = results && results[0] && results[0].rows ? results[0].rows.map(function(row) { return +row[2]; }) : [];
+		var data2 = results && results[1] && results[1].rows ? results[1].rows.map(function(row) { return +row[2]; }) : [];
 
 		<?php
 		// Here we list the shorthand days of the week so it can be used in translation.
@@ -546,7 +550,7 @@ function gd_renderWeekOverWeekChart() {
 		__("Sun",'geodir-ga');
 		?>
 
-		labels = [
+		var labels = [
 			"<?php _e(date('D', strtotime("+1 day")),'geodir-ga'); ?>",
 			"<?php _e(date('D', strtotime("+2 day")),'geodir-ga'); ?>",
 			"<?php _e(date('D', strtotime("+3 day")),'geodir-ga'); ?>",
@@ -601,11 +605,9 @@ function gd_renderMonthOverMonthChart() {
 	var now = moment();
 
 	Promise.all([thisMonth, lastMonth]).then(function(results) {
-		var data1 = results[0].rows.map(function(row) { return +row[2]; });
-		var data2 = results[1].rows.map(function(row) { return +row[2]; });
-		var labels = results[1].rows.map(function(row) { return +row[0]; });
-
-		labels = [<?php echo implode( ",", $month_days ) ?>];
+		var data1 = results && results[0] && results[0].rows ? results[0].rows.map(function(row) { return +row[2]; }) : [];
+		var data2 = results && results[1] && results[1].rows ? results[1].rows.map(function(row) { return +row[2]; }) : [];
+		var labels = [<?php echo implode( ",", $month_days ) ?>];
 		
 		for (var i = 0, len = labels.length; i < len; i++) {
 			if (data1[i] === undefined) data1[i] = null;
@@ -844,4 +846,49 @@ function geodir_ga_check_post_google_analytics( $post ) {
 	$check = ! empty( $package->google_analytics ) ? true : false;
 
 	return apply_filters( 'geodir_ga_check_post_google_analytics', $check, $post );
+}
+
+/**
+ * Generate a specific access token for a page and access level.
+ * 
+ * @param string $access_level
+ *
+ * @return string
+ */
+function geodir_ga_get_page_access_token( $access_level = 'administrator', $path = '' ) {
+	$token = '';
+	$path = $path ? wp_unslash( $path ) : wp_unslash( $_SERVER['REQUEST_URI'] );
+
+	if ( $path && $access_level ) {
+		$token = wp_hash( $path . $access_level );
+	}
+
+	return $token;
+}
+
+/**
+ * Check if a page access token is valid for the specific user type.
+ *
+ * @param $token
+ * @param $path
+ *
+ * @return bool
+ */
+function geodir_ga_validate_page_access_token( $token, $path ) {
+	$result = false;
+	$user_id = get_current_user_id();
+
+	if ( $token ) {
+		if ( $token == geodir_ga_get_page_access_token( 'all', $path ) ) {
+			$result = true;
+		} elseif ( $user_id && $token == geodir_ga_get_page_access_token( 'all-logged-in', $path ) ) {
+			$result = true;
+		} elseif ( $user_id && $token == geodir_ga_get_page_access_token( 'author', $path ) ) {
+			$result = true;
+		} elseif ( $user_id && current_user_can( 'manage_options' ) && $token == geodir_ga_get_page_access_token( 'administrator', $path ) ) {
+			$result = true;
+		}
+	}
+
+	return $result;
 }
