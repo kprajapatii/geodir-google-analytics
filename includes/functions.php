@@ -371,7 +371,7 @@ function gd_renderRealTime(dom_ready) {
 	}
 	ga_au_old = ga_au;
 
-	ga_au = ga_data6 && ga_data6.length ? ga_data6.totalsForAllResults["rt:activeUsers"] : 0;
+	ga_au = ga_data6 && typeof ga_data6 == 'object' && ga_data6.totalsForAllResults ? ga_data6.totalsForAllResults["rt:activeUsers"] : 0;
 	if (ga_au > ga_au_old) {
 		jQuery('.gd-ActiveUsers').addClass("is-increasing");
 	}
@@ -884,6 +884,10 @@ function geodir_ga_validate_page_access_token( $token, $path ) {
 		} elseif ( $user_id && $token == geodir_ga_get_page_access_token( 'all-logged-in', $path ) ) {
 			$result = true;
 		} elseif ( $user_id && $token == geodir_ga_get_page_access_token( 'author', $path ) ) {
+			$result = true;
+		} elseif ( $user_id && $token == geodir_ga_get_page_access_token( 'owner', $path ) ) {
+			$result = true;
+		} elseif ( $user_id && $token == geodir_ga_get_page_access_token( 'owner,administrator', $path ) ) {
 			$result = true;
 		} elseif ( $user_id && current_user_can( 'manage_options' ) && $token == geodir_ga_get_page_access_token( 'administrator', $path ) ) {
 			$result = true;
