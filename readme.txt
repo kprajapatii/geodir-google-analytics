@@ -37,6 +37,9 @@ An answer to that question.
 
 == Changelog ==
 
+= 2.1.1.2 =
+* Analytics stats not working with owner,administrator user roles - FIXED
+
 = 2.1.1.1 =
 * Added some extra escaping to prevent XSS - CHANGED
 
