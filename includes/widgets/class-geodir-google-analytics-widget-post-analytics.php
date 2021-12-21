@@ -27,13 +27,22 @@ class GeoDir_Google_Analytics_Widget_Post_Analytics extends WP_Super_Duper {
 			'block-icon'     => 'chart-bar',
 			'block-category' => 'geodirectory',
 			'block-keywords' => "['analytics','geodirectory','google']",
-			'block-output'  => array(
-				'element::img' => array(
-					'src'        => geodir_plugin_url() . "/assets/images/block-placeholder-map.png",
-					'alt'        => __( 'Placeholder', 'geodir-ga' ),
-					'title'      => '[%title%]',
-					'user_roles' => '[%user_roles%]',
-				)
+			'block-output'   => array(
+				array(
+					'element'   => 'div',
+					'className' => '[%className%]',
+					'style'     => '{background: "#eee", width: "100%", height: "64px", position: "relative", border: "solid 1px #e0e0e0", color: "#1d2327"}',
+					array(
+						'element'   => 'i',
+						'className' => 'fas fa-chart-bar',
+						'style'     => '{"paddingLeft": "12px", "verticalAlign": "middle", "lineHeight": "64px", "fontSize": "16px"}',
+					),
+					array(
+						'element'   => 'span',
+						'style'     => '{"fontWeight": "600", "verticalAlign": "middle", "lineHeight": "64px", width: "100%", "fontSize": "14px"}',
+						'content'   => ' ' . __( 'GD > Google Analytics placeholder', 'geodir-ga' ),
+					),
+				),
 			),
 			'class_name'     => __CLASS__,
 			'base_id'        => 'gd_google_analytics',
