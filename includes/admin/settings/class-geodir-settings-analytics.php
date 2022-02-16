@@ -28,7 +28,7 @@ if ( ! class_exists( 'GeoDir_Settings_Analytics', false ) ) :
 
 			add_filter( 'geodir_settings_tabs_array', array( $this, 'add_settings_page' ), 50 );
 			add_action( 'geodir_settings_' . $this->id, array( $this, 'output' ) );
-			add_action( 'geodir_sections_' . $this->id, array( $this, 'output_toggle_advanced' ) );
+//			add_action( 'geodir_sections_' . $this->id, array( $this, 'output_toggle_advanced' ) );
 
 			add_action( 'geodir_settings_save_' . $this->id, array( $this, 'save' ) );
 			add_action( 'geodir_sections_' . $this->id, array( $this, 'output_sections' ) );
@@ -75,12 +75,12 @@ if ( ! class_exists( 'GeoDir_Settings_Analytics', false ) ) :
 		public function get_settings( $current_section = '' ) {
 			$settings = apply_filters( 'geodir_google_analytics_settings', 
 				array(
-					array( 
-						'name' => __( 'Google Analytics', 'geodir-ga' ), 
-						'type' => 'title', 
-						'desc' => '', 
-						'id' => 'google_analytic_settings' 
-					),
+//					array(
+//						'name' => __( 'Google Analytics', 'geodir-ga' ),
+//						'type' => 'title',
+//						'desc' => '',
+//						'id' => 'google_analytic_settings'
+//					),
 					array(
 						'name' => __( 'Google Analytic Settings', 'geodir-ga' ),
 						'type' => 'sectionstart', 

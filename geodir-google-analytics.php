@@ -34,7 +34,7 @@ if ( !defined( 'GEODIR_GA_VERSION' ) ) {
 }
 
 if ( ! defined( 'GEODIR_GA_MIN_CORE' ) ) {
-	define( 'GEODIR_GA_MIN_CORE', '2.1.1.5' );
+	define( 'GEODIR_GA_MIN_CORE', '2.2' );
 }
 
 /**
