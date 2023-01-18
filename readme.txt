@@ -37,6 +37,9 @@ An answer to that question.
 
 == Changelog ==
 
+= 2.2.2 =
+* Changes for AUI Bootstrap 5 compatibility - ADDED
+
 = 2.2.1 (2022-11-15) =
 * Graph line & bar color changed - CHANGED
 * Single quote in translations breaks analytics graph - FIXED
