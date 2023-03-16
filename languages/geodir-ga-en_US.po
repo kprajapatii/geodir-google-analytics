@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GeoDirectory Google Analytics 2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-15 18:13+0530\n"
-"PO-Revision-Date: 2023-03-15 18:13+0530\n"
+"POT-Creation-Date: 2023-03-16 13:01+0530\n"
+"PO-Revision-Date: 2023-03-16 13:01+0530\n"
 "Last-Translator: \n"
 "Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
 "Language: en_US\n"
@@ -146,7 +146,11 @@ msgstr ""
 msgid "Account re-authorization may be required"
 msgstr ""
 
-#: includes/class-geodir-google-analytics-ajax.php:114
+#: includes/class-geodir-google-analytics-ajax.php:76
+msgid "GD Google Analytics API Error : empty stats"
+msgstr ""
+
+#: includes/class-geodir-google-analytics-ajax.php:117
 msgid "Something went wrong"
 msgstr ""
 
