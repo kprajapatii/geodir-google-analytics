@@ -35,6 +35,9 @@ Yes
 
 == Changelog ==
 
+= 2.3.8 - 2025-08-TBD =
+* Option added in widget to render output inline - ADDED
+
 = 2.3.7 - 2025-07-03 =
 * Conflicts with Google library from other plugin on settings page - FIXED
 
