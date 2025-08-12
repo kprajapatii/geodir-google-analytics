@@ -115,6 +115,18 @@ class GeoDir_Google_Analytics_Widget_Post_Analytics extends WP_Super_Duper {
 				),
 				'desc_tip' => true,
 				'advanced' => false
+			),
+			'location_level' => array(
+				'type' => 'select',
+				'title' => __( 'Geographic Dimensions:', 'geodir-ga' ),
+				'desc' => __( 'Select geographic dimensions location level to display users count.', 'geodir-ga' ),
+				'options' => array(
+					'' => __( 'Default (Country & City)','geodir-ga' ),
+					'country' => __( 'Country','geodir-ga' ),
+					'city' => __( 'City','geodir-ga' )
+				),
+				'default' => '',
+				'desc_tip' => true
 			)
 		);
 
@@ -199,6 +211,7 @@ class GeoDir_Google_Analytics_Widget_Post_Analytics extends WP_Super_Duper {
 			'output' => '',
 			'button_text' => '',
 			'user_roles' => array( 'owner', 'administrator' ),
+			'location_level' => '',
 			'height' => 200,
 			// AUI
 			'btn_color' => '',

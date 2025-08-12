@@ -114,17 +114,27 @@ function geodir_ga_get_analytics( $page, $ga_start, $ga_end ) {
 		$dimensions = "ga:month,ga:nthMonth";
 		$_dimensions = 'month';
 	} else if ( $type == 'country' ) {
-		$start_date = "14daysAgo";
+		$start_date = "30daysAgo";
 		$end_date = "today";
 		$dimensions = "ga:country";
 		$sort = "-ga:pageviews";
 		$limit  = 10;
 		$_dimensions = 'country';
+	} else if ( $type == 'city' ) {
+		$start_date = "30daysAgo";
+		$end_date = "today";
+		$dimensions = "ga:city";
+		$sort = "-ga:pageviews";
+		$limit  = 10;
+		$_dimensions = 'city';
 	} else {
 		$metrics = "rt:activeUsers";
 		$realtime = true;
 		$_dimensions = '';
 	}
+
+	$start_date = apply_filters( 'geodir_google_analytics_param_start_date', $start_date, $type );
+	$end_date = apply_filters( 'geodir_google_analytics_param_end_date', $end_date, $type );
 
 	# Create a new Gdata call
 	$gaApi = new GeoDir_Google_Analytics_API();
@@ -152,6 +162,9 @@ function geodir_ga_get_analytics( $page, $ga_start, $ga_end ) {
 	if ( geodir_ga_type( $property_id ) == 'ga4' ) {
 		$is_ga4 = true;
 		$page_title = ! empty( $_REQUEST['ga_title'] ) ? sanitize_text_field( $_REQUEST['ga_title'] ) : '';
+
+		$page = apply_filters( 'geodir_google_analytics_param_page', $page );
+		$page_title = apply_filters( 'geodir_google_analytics_param_page_title', $page_title );
 
 		$stats = $gaApi->getReport( $property_id, $type, $start_date, $end_date, $_dimensions, $page, $page_title, $limit );
 	} else {
@@ -329,6 +342,18 @@ function geodir_ga_display_analytics( $args = array() ) {
 		__( "Sat", 'geodir-ga' );
 		__( "Sun", 'geodir-ga' );
 
+		$analytics_options = geodir_ga_analytics_options();
+
+		if ( ! empty( $args['location_level'] ) ) {
+			if ( $args['location_level'] == 'country' && isset( $analytics_options['city'] ) ) {
+				unset( $analytics_options['city'] );
+			}
+
+			if ( $args['location_level'] == 'city' && isset( $analytics_options['country'] ) ) {
+				unset( $analytics_options['country'] );
+			}
+		}
+
 		if ( $design_style ) {
 			if ( ! empty( $args['btn_color'] ) ) {
 				$btn_class .= ' btn-' . sanitize_html_class( $args['btn_color'] );
@@ -370,13 +395,7 @@ function geodir_ga_display_analytics( $args = array() ) {
 				'value' => '',
 				'label_show' => false,
 				'label' => '',
-				'options' => array(
-					'weeks' => __( "This Week vs Last Week", 'geodir-ga' ),
-					'months' => __( "This Month vs Last Month", 'geodir-ga' ),
-					'years' => __( "This Year vs Last Year", 'geodir-ga' ),
-					'country' => __( "Top Countries", 'geodir-ga' ),
-				),
-				'select2' => true,
+				'options' => $analytics_options,
 				'extra_attributes' => array(
 					'onchange' => 'gdga_select_option();'
 				),
@@ -397,10 +416,9 @@ function geodir_ga_display_analytics( $args = array() ) {
 	</div>
 	<div class="gdga-type-container" style="display:none">
 		<select id="gdga-select-analytic" class="geodir-select" onchange="gdga_select_option();">
-			<option value="weeks"><?php _e("This Week vs Last Week", 'geodir-ga');?></option>
-			<option value="months"><?php _e("This Month vs Last Month", 'geodir-ga');?></option>
-			<option value="years"><?php _e("This Year vs Last Year", 'geodir-ga');?></option>
-			<option value="country"><?php _e("Top Countries", 'geodir-ga');?></option>
+			<?php foreach ( $analytics_options as $option_key => $option_label ) { ?>
+			<option value="<?php echo esc_attr( $option_key ); ?>"><?php echo esc_html( $option_label ); ?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="Chartjs-figure" id="gdga-chart-container"></div>
@@ -587,16 +605,18 @@ function gdga_weekVSweek(){jQuery.ajax({url:"<?php echo ( admin_url( 'admin-ajax
 function gdga_monthVSmonth(){jQuery.ajax({url:"<?php echo ( admin_url( 'admin-ajax.php?action=geodir_ga_stats&ga_page=' . $page_url . '&ga_type=thismonth&ga_post=' . $post->ID ) ); ?>&pt="+gd_gaPageToken,beforeSend:function(){jQuery("#gdga-chart-container").css({opacity:.6})},success:function(result){ga_data1=jQuery.parseJSON(result);if(ga_data1.error){jQuery("#ga_stats").html(result);return}gd_renderMonthOverMonthChart();jQuery("#gdga-chart-container").css({opacity:1})},error:function(xhr,textStatus,errorThrown){jQuery("#gdga-chart-container").css({opacity:1})}});jQuery.ajax({url:"<?php echo ( admin_url( 'admin-ajax.php?action=geodir_ga_stats&ga_page=' . $page_url . '&ga_type=lastmonth&ga_post=' . $post->ID ) ); ?>&pt="+gd_gaPageToken,success:function(result){ga_data2=jQuery.parseJSON(result);gd_renderMonthOverMonthChart()}})}
 function gdga_yearVSyear(){jQuery.ajax({url:"<?php echo ( admin_url( 'admin-ajax.php?action=geodir_ga_stats&ga_page=' . $page_url . '&ga_type=thisyear&ga_post=' . $post->ID ) ); ?>&pt="+gd_gaPageToken,beforeSend:function(){jQuery("#gdga-chart-container").css({opacity:.6})},success:function(result){ga_data3=jQuery.parseJSON(result);if(ga_data3.error){jQuery("#ga_stats").html(result);return}gd_renderYearOverYearChart();jQuery("#gdga-chart-container").css({opacity:1})},error:function(xhr,textStatus,errorThrown){jQuery("#gdga-chart-container").css({opacity:1})}});jQuery.ajax({url:"<?php echo ( admin_url( 'admin-ajax.php?action=geodir_ga_stats&ga_page=' . $page_url . '&ga_type=lastyear&ga_post=' . $post->ID ) ); ?>&pt="+gd_gaPageToken,success:function(result){ga_data4=jQuery.parseJSON(result);gd_renderYearOverYearChart()}})}
 function gdga_country(){jQuery.ajax({url:"<?php echo ( admin_url( 'admin-ajax.php?action=geodir_ga_stats&ga_page=' . $page_url . '&ga_type=country&ga_post=' . $post->ID ) ); ?>&pt="+gd_gaPageToken,beforeSend:function(){jQuery("#gdga-chart-container").css({opacity:.6})},success:function(result){ga_data5=jQuery.parseJSON(result);if(ga_data5.error){jQuery("#ga_stats").html(result);return}gd_renderTopCountriesChart();jQuery("#gdga-chart-container").css({opacity:1})},error:function(xhr,textStatus,errorThrown){jQuery("#gdga-chart-container").css({opacity:1})}})}
+function gdga_city(){jQuery.ajax({url:"<?php echo ( admin_url( 'admin-ajax.php?action=geodir_ga_stats&ga_page=' . $page_url . '&ga_type=city&ga_post=' . $post->ID ) ); ?>&pt="+gd_gaPageToken,beforeSend:function(){jQuery("#gdga-chart-container").css({opacity:.6})},success:function(result){ga_data6=jQuery.parseJSON(result);if(ga_data6.error){jQuery("#ga_stats").html(result);return}gd_renderTopCitiesChart();jQuery("#gdga-chart-container").css({opacity:1})},error:function(xhr,textStatus,errorThrown){jQuery("#gdga-chart-container").css({opacity:1})}})}
 function gdga_realtime(dom_ready){jQuery.ajax({url:"<?php echo ( admin_url( 'admin-ajax.php?action=geodir_ga_stats&ga_page=' . $page_url .'&ga_type=realtime&ga_post=' . $post->ID ) ); ?>"+geodir_analytics_title_arg()+"&pt="+gd_gaPageToken,success:function(result){ga_data6=jQuery.parseJSON(result);if(ga_data6.error){jQuery("#ga_stats").html(result);return}gd_renderRealTime(dom_ready)}})}
 function geodir_analytics_title_arg(){var title=jQuery("title:first").text();if(title){title=encodeURIComponent(title)}return"&ga_title="+title}
 function gd_renderRealTime(dom_ready){if(typeof dom_ready==="undefined"){gdga_refresh(true)}ga_au_old=ga_au;if(ga_data6&&typeof ga_data6=="object"&&ga_data6.activeUsers&&ga_data6.activeUsers.realtime){ga_au=typeof ga_data6.activeUsers.realtime.totalActiveUsers!="undefined"?ga_data6.activeUsers.realtime.totalActiveUsers:0}else{ga_au=ga_data6&&typeof ga_data6=="object"&&ga_data6.totalsForAllResults?ga_data6.totalsForAllResults["rt:activeUsers"]:0}if(ga_au>ga_au_old){jQuery(".gd-ActiveUsers").addClass("is-increasing")}if(ga_au<ga_au_old){jQuery(".gd-ActiveUsers").addClass("is-decreasing")}jQuery(".gd-ActiveUsers-value").html(ga_au);if(gd_gaTime>0&&gd_gaAutoRefresh===1){gd_gaTimeOut=setTimeout(function(){jQuery(".gd-ActiveUsers").removeClass("is-increasing is-decreasing");gdga_realtime()},gd_gaTime)}}
-function gd_renderTopCountriesChart(){if (ga_data5){response = ga_data5;ga_data5 = false;} else{return;}jQuery('#gdga-chart-container').show();gdga_refresh(true);jQuery('.gdga-type-container').show();jQuery('#gdga-select-analytic').prop('disabled', false);var rows = [];if (typeof response.screenPageViews !== 'undefined'){try{rows = response['screenPageViews']['country']['rows'];} catch(err){}}else{rows = response.rows;}var labels = [];var values = [];var bgcolors = [];var colors = ['rgb(255,165,0)', 'rgb(255,0,0)', 'rgb(128,0,128)','rgb(54,162,235)', 'rgb(0,128,0)', 'rgb(0,0,255)', 'rgb(192,192,192)', 'rgb(128,0,0)', 'rgb(255,127,80)', '189,183,107)', 'rgb(255,215,0)'];if (typeof rows !== "undefined" && rows.length){rows.forEach(function(row, i){labels[i] = row[0];values[i] = parseInt(row[1]);bgcolors[i] = colors[i];});var data ={labels:labels,datasets:[{label:'<?php echo addslashes( __( 'Countries', 'geodir-ga' ) );?>',data:values,backgroundColor:bgcolors,hoverOffset:4,borderWidth:1}]};var options={plugins:{legend:{display:true,position:'bottom'},title:{display:true,position:'top',text:geodir_ga_htmlEscape('<?php echo esc_js( __( 'Top Countries', 'geodir-ga' ) ); ?>')}}};var type='doughnut';<?php do_action( 'geodir_google_analytics_chart_options_countries' ); ?>new Chart(geodirGaMakeCanvas('gdga-chart-container'),{type:type,data:data,options:options});}else{gdga_noResults();}}
+function gd_renderTopCountriesChart(){if (ga_data5){response = ga_data5;ga_data5 = false;} else{return;}jQuery('#gdga-chart-container').show();gdga_refresh(true);jQuery('.gdga-type-container').show();jQuery('#gdga-select-analytic').prop('disabled', false);var rows = [];if (typeof response.screenPageViews !== 'undefined'){try{rows = response['screenPageViews']['country']['rows'];} catch(err){}}else{rows = response.rows;}var labels = [];var values = [];var bgcolors = [];var colors = ['rgb(255,165,0)', 'rgb(255,0,0)', 'rgb(128,0,128)','rgb(54,162,235)', 'rgb(0,128,0)', 'rgb(0,0,255)', 'rgb(192,192,192)', 'rgb(128,0,0)', 'rgb(255,127,80)', '189,183,107)', 'rgb(255,215,0)'];if (typeof rows !== "undefined" && rows.length){rows.forEach(function(row, i){labels[i]=(row[0]!="(not set)"?row[0]:geodir_ga_htmlEscape('<?php echo esc_js( __( 'Unknown', 'geodir-ga' ) ); ?>'));values[i] = parseInt(row[1]);bgcolors[i] = colors[i];});var data ={labels:labels,datasets:[{label:'<?php echo addslashes( __( 'Countries', 'geodir-ga' ) );?>',data:values,backgroundColor:bgcolors,hoverOffset:4,borderWidth:1}]};var options={plugins:{legend:{display:true,position:'bottom'},title:{display:true,position:'top',text:geodir_ga_htmlEscape('<?php echo esc_js( __( 'Top Countries', 'geodir-ga' ) ); ?>')}}};var type='doughnut';<?php do_action( 'geodir_google_analytics_chart_options_countries' ); ?>new Chart(geodirGaMakeCanvas('gdga-chart-container'),{type:type,data:data,options:options});}else{gdga_noResults();}}
+function gd_renderTopCitiesChart(){if (ga_data6){response = ga_data6;ga_data6 = false;} else{return;}jQuery('#gdga-chart-container').show();gdga_refresh(true);jQuery('.gdga-type-container').show();jQuery('#gdga-select-analytic').prop('disabled', false);var rows = [];if (typeof response.screenPageViews !== 'undefined'){try{rows = response['screenPageViews']['city']['rows'];} catch(err){}}else{rows = response.rows;}var labels = [];var values = [];var bgcolors = [];var colors = ['rgb(255,165,0)', 'rgb(255,0,0)', 'rgb(128,0,128)','rgb(54,162,235)', 'rgb(0,128,0)', 'rgb(0,0,255)', 'rgb(192,192,192)', 'rgb(128,0,0)', 'rgb(255,127,80)', '189,183,107)', 'rgb(255,215,0)'];if (typeof rows !== "undefined" && rows.length){rows.forEach(function(row, i){labels[i]=(row[0]!="(not set)"?row[0]:geodir_ga_htmlEscape('<?php echo esc_js( __( 'Unknown', 'geodir-ga' ) ); ?>'));values[i] = parseInt(row[1]);bgcolors[i] = colors[i];});var data ={labels:labels,datasets:[{label:'<?php echo addslashes( __( 'Cities', 'geodir-ga' ) );?>',data:values,backgroundColor:bgcolors,hoverOffset:4,borderWidth:1}]};var options={plugins:{legend:{display:true,position:'bottom'},title:{display:true,position:'top',text:geodir_ga_htmlEscape('<?php echo esc_js( __( 'Top Cities', 'geodir-ga' ) ); ?>')}}};var type='doughnut';<?php do_action( 'geodir_google_analytics_chart_options_cities' ); ?>new Chart(geodirGaMakeCanvas('gdga-chart-container'),{type:type,data:data,options:options});}else{gdga_noResults();}}
 function gd_renderYearOverYearChart(){if(ga_data3&&ga_data4){if(typeof ga_data3.screenPageViews!=="undefined"){try{ga_data3.rows=ga_data3["screenPageViews"]["thisyear"]["rows"]}catch(err){}}if(typeof ga_data4.screenPageViews!=="undefined"){try{ga_data4.rows=ga_data4["screenPageViews"]["lastyear"]["rows"]}catch(err){}}thisYear=ga_data3;lastYear=ga_data4;ga_data3=false;ga_data4=false}else{return}jQuery("#gdga-chart-container").show();gdga_refresh(true);jQuery(".gdga-type-container").show();jQuery("#gdga-select-analytic").prop("disabled",false);var now=moment();Promise.all([thisYear, lastYear]).then(function(results){var data1=results && results[0] && results[0].rows ? results[0].rows.map(function(row){return +row[2];}):[];var data2=results && results[1] && results[1].rows ? results[1].rows.map(function(row){return +row[2];}):[];var labels=[geodir_ga_htmlEscape('<?php echo esc_js( __( 'Jan', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Feb', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Mar', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Apr', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'May', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Jun', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Jul', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Aug', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Sep', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Oct', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Nov', 'geodir-ga' ) ); ?>'),geodir_ga_htmlEscape('<?php echo esc_js( __( 'Dec', 'geodir-ga' ) ); ?>')];for (var i=0,len=labels.length;i < len;i++){if(data1[i]===undefined) data1[i]=null;if (data2[i]===undefined) data2[i]=null;}var data={labels:labels,datasets:[{label:geodir_ga_htmlEscape('<?php echo esc_js( __( 'Last Year', 'geodir-ga' ) ); ?>'),borderColor:'rgb(255,159,64)',backgroundColor:'rgba(255,159,64,0.5)',borderWidth:1,maxBarThickness:20,data:data2},{label:geodir_ga_htmlEscape('<?php echo esc_js( __( 'This Year', 'geodir-ga' ) ); ?>'),borderColor:'rgb(54,162,235)',backgroundColor:'rgba(54,162,235,0.5)',borderWidth:1,maxBarThickness:20,data:data1}]};var options={plugins:{legend:{display:true,position:'top'},title:{display:true,position:'top',text:geodir_ga_htmlEscape('<?php echo esc_js( __( 'This Year vs Last Year', 'geodir-ga' ) ); ?>')}},scales:{y:{min:0}}};var type='bar';<?php do_action( 'geodir_google_analytics_chart_options_year' ); ?>new Chart(geodirGaMakeCanvas('gdga-chart-container'),{type:type,data:data,options:options});}).catch(function(err){console.error(err.stack);})}
 function gd_renderWeekOverWeekChart(){if(ga_data1&&ga_data2){if(typeof ga_data1.screenPageViews!=="undefined"){try{ga_data1.rows=ga_data1["screenPageViews"]["thisweek"]["rows"]}catch(err){}}if(typeof ga_data2.screenPageViews!=="undefined"){try{ga_data2.rows=ga_data2["screenPageViews"]["lastweek"]["rows"]}catch(err){}}thisWeek=ga_data1;lastWeek=ga_data2;ga_data1=false;ga_data2=false}else{return;}jQuery('#gdga-chart-container').show();gdga_refresh(true);jQuery('.gdga-type-container').show();jQuery('#gdga-select-analytic').prop('disabled', false);var now=moment();Promise.all([thisWeek, lastWeek]).then(function(results){var data1=results && results[0] && results[0].rows ? results[0].rows.map(function(row){return +row[2];}):[];var data2=results && results[1] && results[1].rows ? results[1].rows.map(function(row){return +row[2];}):[];var labels=[geodir_ga_htmlEscape("<?php echo esc_js( date_i18n( 'D', strtotime( "+1 day" ) ) ); ?>"),geodir_ga_htmlEscape("<?php echo esc_js( date_i18n( 'D', strtotime( "+2 day" ) ) ); ?>"),geodir_ga_htmlEscape("<?php echo esc_js( date_i18n( 'D', strtotime( "+3 day" ) ) ); ?>"),geodir_ga_htmlEscape("<?php echo esc_js( date_i18n( 'D', strtotime( "+4 day" ) ) ); ?>"),geodir_ga_htmlEscape("<?php echo esc_js( date_i18n( 'D', strtotime( "+5 day" ) ) ); ?>"),geodir_ga_htmlEscape("<?php echo esc_js( date_i18n( 'D', strtotime( "+6 day" ) ) ); ?>"),geodir_ga_htmlEscape("<?php echo esc_js( date_i18n( 'D', strtotime( "+7 day" ) ) ); ?>")];var data ={labels:labels,datasets:[{label:geodir_ga_htmlEscape('<?php echo esc_js( __( 'Last Week', 'geodir-ga' ) ); ?>'),borderColor:'rgb(255,159,64)',backgroundColor:'rgba(255,159,64,0.5)',borderWidth:1,data:data2,cubicInterpolationMode:'monotone',fill:true,tension:0.4,pointStyle:'circle',pointRadius:5,pointHoverRadius:8},{label:geodir_ga_htmlEscape('<?php echo esc_js( __( 'This Week', 'geodir-ga' ) ); ?>'),borderColor:'rgb(54,162,235)',backgroundColor:'rgba(54,162,235,0.5)',borderWidth:1,data:data1,cubicInterpolationMode:'monotone',fill:true,tension:0.4,pointStyle:'circle',pointRadius:5,pointHoverRadius:8}]};var options={plugins:{legend:{display:true,position:'top'},title:{display:true,position:'top',text:geodir_ga_htmlEscape('<?php echo esc_js( __( 'This Week vs Last Week', 'geodir-ga' ) ); ?>')}},scales:{y:{min:0}}};var type='line';<?php do_action( 'geodir_google_analytics_chart_options_week' ); ?>new Chart(geodirGaMakeCanvas('gdga-chart-container'),{type:type,data:data,options:options});});}
 function gd_renderMonthOverMonthChart(){if(ga_data1&&ga_data2){if(typeof ga_data1.screenPageViews!=="undefined"){try{ga_data1.rows=ga_data1["screenPageViews"]["thismonth"]["rows"]}catch(err){}}if(typeof ga_data2.screenPageViews!=="undefined"){try{ga_data2.rows=ga_data2["screenPageViews"]["lastmonth"]["rows"]}catch(err){}}thisMonth=ga_data1;lastMonth=ga_data2;ga_data1=false;ga_data2=false}else{return}jQuery("#gdga-chart-container").show();gdga_refresh(true);jQuery(".gdga-type-container").show();jQuery("#gdga-select-analytic").prop("disabled",false);var now=moment();Promise.all([thisMonth, lastMonth]).then(function(results){var data1=results && results[0] && results[0].rows ? results[0].rows.map(function(row){return +row[2];}):[];var data2=results && results[1] && results[1].rows ? results[1].rows.map(function(row){return +row[2];}):[];var labels=[<?php echo implode( ",", $month_days ) ?>];for (var i=0, len=labels.length; i < len; i++){if (data1[i] === undefined) data1[i]=null;if (data2[i] === undefined) data2[i]=0;}var data ={labels:labels,datasets:[{label:geodir_ga_htmlEscape('<?php echo esc_js( __( 'Last Month', 'geodir-ga' ) ); ?>'),borderColor:'rgb(255,159,64)',backgroundColor:'rgba(255,159,64,0.5)',borderWidth:1,data:data2,cubicInterpolationMode:'monotone',fill:true,tension:0.4,pointStyle:'circle',pointRadius:5,pointHoverRadius:8},{label:geodir_ga_htmlEscape('<?php echo esc_js( __( 'This Month', 'geodir-ga' ) ); ?>'),borderColor:'rgb(54,162,235)',backgroundColor:'rgba(54,162,235,0.5)',borderWidth:1,data:data1,cubicInterpolationMode:'monotone',fill:true,tension:0.4,pointStyle:'circle',pointRadius:5,pointHoverRadius:8}]};var options={plugins:{legend:{display:true,position:'top'},title:{display:true,position:'top',text:geodir_ga_htmlEscape('<?php echo esc_js( __( 'This Month vs Last Month', 'geodir-ga' ) ); ?>')}},scales:{y:{min:0}}};var type='line';<?php do_action( 'geodir_google_analytics_chart_options_month' ); ?>new Chart(geodirGaMakeCanvas('gdga-chart-container'),{type:type,data:data,options:options});});}
-function gdga_noResults(){jQuery('#gdga-chart-container').html('<p>' + geodir_ga_htmlEscape('<?php echo esc_js( __( 'No results available', 'geodir-ga' ) ); ?>') + '</p>');}
+function gdga_noResults(){jQuery('#gdga-chart-container').html('<p class="alert alert-info">' + geodir_ga_htmlEscape('<?php echo esc_js( __( 'No results available', 'geodir-ga' ) ); ?>') + '</p>');}
 function geodirGaMakeCanvas(id){var container=document.getElementById(id);var canvas=document.createElement("canvas");var ctx=canvas.getContext("2d");container.innerHTML="";canvas.width=container.offsetWidth;canvas.height=container.offsetHeight;container.appendChild(canvas);return ctx}
-function gdga_select_option(){jQuery("#gdga-select-analytic").prop("disabled",true);gdga_refresh();gaType=jQuery("#gdga-select-analytic").val();if(gaType=="weeks"){gdga_weekVSweek()}else if(gaType=="months"){gdga_monthVSmonth()}else if(gaType=="years"){gdga_yearVSyear()}else if(gaType=="country"){gdga_country()}}
+function gdga_select_option(){jQuery("#gdga-select-analytic").prop("disabled",true);gdga_refresh();gaType=jQuery("#gdga-select-analytic").val();if(gaType=="weeks"){gdga_weekVSweek()}else if(gaType=="months"){gdga_monthVSmonth()}else if(gaType=="years"){gdga_yearVSyear()}else if(gaType=="country"){gdga_country()}else if(gaType=="city"){gdga_city()}}
 function gdga_refresh(stop){if(typeof stop!=="undefined"&&stop){if(gd_gaAutoRefresh===1||gd_gaHideRefresh==1){jQuery("#gdga-loader-icon").hide()}else{jQuery("#gdga-loader-icon .fa-sync").removeClass("fa-spin")}}else{if(gd_gaAutoRefresh===1||gd_gaHideRefresh==1){jQuery("#gdga-loader-icon").show()}else{if(!jQuery("#gdga-loader-icon .fa-sync").hasClass("fa-spin")){jQuery("#gdga-loader-icon .fa-sync").addClass("fa-spin")}}}}
 function geodir_ga_htmlEscape(str){return String(str).replace(/&prime;/g,"'").replace(/&frasl;/g,"/").replace(/&ndash;/g,"-").replace(/&ldquo;/g,'"').replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&amp;quot;/g,'"').replace(/&amp;apos;/g,"'")};
 <?php if ( 0 ) { ?></script><?php }
@@ -604,4 +624,16 @@ function geodir_ga_htmlEscape(str){return String(str).replace(/&prime;/g,"'").re
 	$script = ob_get_clean();
 
 	return trim( $script );
+}
+
+function geodir_ga_analytics_options() {
+	$options = array(
+		'weeks' => __( 'This Week vs Last Week', 'geodir-ga' ),
+		'months' => __( 'This Month vs Last Month', 'geodir-ga' ),
+		'years' => __( 'This Year vs Last Year', 'geodir-ga' ),
+		'country' => __( 'Top Countries', 'geodir-ga' ),
+		'city' => __( 'Top Cities', 'geodir-ga' )
+	);
+
+	return apply_filters( 'geodir_ga_get_analytics_options', $options );
 }
